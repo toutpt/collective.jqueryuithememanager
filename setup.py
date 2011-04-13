@@ -26,6 +26,9 @@ setup(name='collective.jqueryuithememanager',
       install_requires=[
           'setuptools',
           'collective.js.jqueryui',
+          'collective.z3cform.colorpicker',
+          'plone.app.registry',
+          'plone.resource',
           # -*- Extra requirements: -*-
       ],
       extras_require = dict(

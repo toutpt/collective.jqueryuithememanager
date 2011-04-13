@@ -1,5 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
@@ -14,6 +15,42 @@
       description="Installs the collective.jqueryuithememanager package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
+
   <!-- -*- extra stuff goes here -*- -->
-  
+  <include package="plone.autoform" />
+  <include package="plone.resource" />
+  <include package="plone.app.registry"/>
+  <include package="collective.z3cform.colorpicker"/>
+
+  <browser:page
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    name="collective.jqueryuithememanager-controlpanel"
+    template="controlpanel_main.pt"
+    permission="cmf.ManagePortal"
+    />
+  <browser:page
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    name="collective.jqueryuithememanager-select"
+    class=".controlpanel.MainControlPanelView"
+    permission="cmf.ManagePortal"
+    />
+  <browser:page
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    name="collective.jqueryuithememanager-custom-controlpanel"
+    class=".controlpanel.CustomControlPanelView"
+    permission="cmf.ManagePortal"
+    />
+  <browser:page
+    for="*"
+    name="jqueryui-import-theme"
+    class=".controlpanel.ImportThemeForm"
+    template="controlpanel_import.pt"
+    permission="cmf.ManagePortal"
+    />
+
+  <subscriber handler=".controlpanel.handleRegistryModified" />
+  <utility
+    component=".theme.JQueryUIThemeVocabulary"
+    name="collective.jqueryuithememanager.vocabularies.themes"
+    />
 </configure>
