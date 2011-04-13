@@ -1,0 +1,80 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/prefs_main_template/macros/master"
+      i18n:domain="plonetheme.jqueryui">
+
+<body>
+
+<div metal:fill-slot="prefs_configlet_main">
+
+    <h1 class="documentFirstHeading"
+        i18n:translate="heading_theme_settings">Theme settings</h1>
+
+    <a href=""
+        class="link-parent"
+        tal:attributes="href string:${portal_url}/collective.jqueryuithememanager-controlpanel"
+        i18n:translate="label_up_to_jqueryuisettings">
+            Up to JQueryUI Settings
+    </a>
+
+    <p i18n:translate="description_theme_settings">
+        Use this control panel to import a jqueryui theme.
+    </p>
+
+        <form
+            name="import"
+            method="post" 
+            enctype="multipart/form-data"
+            class="enableUnloadProtection"
+            tal:attributes="action request/URL"
+            tal:define="errors view/errors">
+
+            <div
+                class="field"
+                tal:define="error errors/themeArchive | nothing"
+                tal:attributes="class python:'field error' if error else 'field'">
+                
+                <label for="themeArchive" i18n:translate="label_theme_zip">Theme zip file</label>
+                
+                <div class="formHelp" i18n:translate="help_theme_archive">
+                    You can build a theme on http://jqueryui.com/themeroller/
+                </div>
+                
+                <div tal:content="error" tal:condition="error" />
+                
+                <input
+                    type="file"
+                    name="themeArchive"
+                    id="themeArchive"
+                    />
+                
+            </div>
+            
+            
+            <div class="formControls">
+                <input
+                    type="submit"
+                    name="form.button.Import"
+                    class="context"
+                    value="Import"
+                    i18n:attributes="value" />
+                
+                <input
+                    type="submit"
+                    name="form.button.Cancel"
+                    class="context"
+                    value="Cancel"
+                    i18n:attributes="value" />
+            </div>
+            
+            <input tal:replace="structure context/@@authenticator/authenticator" />
+        
+        </form>
+
+</div>
+
+</body>
+</html>

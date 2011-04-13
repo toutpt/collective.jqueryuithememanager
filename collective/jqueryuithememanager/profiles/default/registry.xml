@@ -1,0 +1,4 @@
+<registry>
+  <records interface="collective.jqueryuithememanager.interfaces.IJQueryUIThemeSettings" purge="true" />
+  <records interface="collective.jqueryuithememanager.interfaces.IJQueryUITheme" />
+</registry>
