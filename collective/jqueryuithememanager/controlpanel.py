@@ -39,6 +39,7 @@ class CustomControlPanelForm(RegistryEditForm):
         theme.unregisterTheme(oldtheme)
         theme.download_theme(data)
         theme.registerTheme(data['name'])
+        theme.setCurrentThemeId(data['name'])
 
 
 CustomControlPanelView = layout.wrap_form(CustomControlPanelForm,

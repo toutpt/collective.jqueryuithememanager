@@ -67,6 +67,7 @@ def importTheme(themeArchive):
     oldTheme = getCurrentThemeId()
     unregisterTheme(oldTheme)
     registerTheme(infos['name'])
+    setCurrentThemeId(infos['name'])
 
 def getThemeDirectory():
     """Obtain the 'jqueryuitheme' persistent resource directory,
@@ -90,11 +91,15 @@ def getCurrentThemeId():
     registry = component.getUtility(IRegistry).forInterface(interfaces.IJQueryUIThemeSettings)
     return registry.theme
 
+def setCurrentThemeId(themeid):
+    registry = component.getUtility(IRegistry).forInterface(interfaces.IJQueryUIThemeSettings)
+    registry.theme = themeid
+
 def unregisterTheme(themeid):
     """Disable stylesheet corresponding to the theme"""
+    logger.info('unregisterTheme %s'%themeid)
     plone = component.getSiteManager()
     csstool = plone.portal_css
-
     if themeid in ('collective.js.jqueryui','sunburst'):
         stylesheet = csstool.getResourcesDict()[SUNBURST_CSS_ID]
         stylesheet.setEnabled(False)
@@ -115,7 +120,7 @@ def unregisterTheme(themeid):
         stylesheet.setEnabled(False)
         csstool.cookResources()
     except NotFound, e:
-        logger.info('the new theme has not been found in resource directory')
+        logger.info('the old theme has not been found in resource directory')
     except Exception, e:
         logger.error(e)
 
@@ -124,6 +129,7 @@ def registerTheme(themeid):
     If already registred -> just activate it
     else register it and activate it
     """
+    logger.info('registerTheme %s'%themeid)
     plone = component.getSiteManager()
     csstool = plone.portal_css
     
