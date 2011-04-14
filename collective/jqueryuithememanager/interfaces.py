@@ -22,6 +22,7 @@ class IJQueryUIThemeSettings(interface.Interface):
     """JQueryUIThem settings"""
 
     theme = schema.ASCIILine(title=i18n.label_theme,
+                             default='sunburst',
                              required=True)
 #                          vocabulary='collective.jqueryuithememanager.vocabularies.themes')
 #    theme = schema.Choice(title=i18n.label_theme,

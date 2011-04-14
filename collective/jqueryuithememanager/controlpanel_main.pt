@@ -21,7 +21,7 @@
     </a>
 
     <p i18n:translate="description_theme_settings">
-        Use this control panel to import a jqueryui theme.
+        Use this control panel to manage jqueryui themes.
     </p>
     <ul>
         <li><a href="" tal:attributes="href string:${view/context/absolute_url}/@@jqueryui-import-theme">Import a JQueryUI Theme</a></li>
