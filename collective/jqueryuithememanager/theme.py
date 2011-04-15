@@ -64,10 +64,10 @@ def importTheme(themeArchive):
     themeContainer.importZip(themeZip)
     for i in ('index.html', 'development-bundle', 'js'):
         del themeContainer[i]
-    oldTheme = getCurrentThemeId()
-    unregisterTheme(oldTheme)
-    registerTheme(infos['name'])
-    setCurrentThemeId(infos['name'])
+#    oldTheme = getCurrentThemeId()
+#    unregisterTheme(oldTheme)
+#    registerTheme(infos['name'])
+#    setCurrentThemeId(infos['name'])
 
 def getThemeDirectory():
     """Obtain the 'jqueryuitheme' persistent resource directory,
