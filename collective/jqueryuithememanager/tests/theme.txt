@@ -1,0 +1,78 @@
+=========================
+Folder functional doctest
+=========================
+
+    >>> from plone.testing.z2 import Browser
+    >>> browser = Browser(self.layer['app'])
+    >>> browser.handleErrors = False
+    >>> portal_url = self.portal.absolute_url()
+    >>> self.portal.error_log._ignored_exceptions = ()
+    >>> from plone.app import testing
+    >>> browser.open(portal_url)
+
+Login
+
+    >>> browser.getLink('Log in').click()
+    >>> browser.getControl(name='__ac_name').value = testing.SITE_OWNER_NAME
+    >>> browser.getControl(name='__ac_password').value = testing.SITE_OWNER_PASSWORD
+    >>> browser.getControl(name='submit').click()
+    >>> "You are now logged in" in browser.contents
+    True
+
+Got to control panel
+
+    >>> browser.getLink('Site Setup').click()
+    >>> browser.getLink('JQueryUI theme manager').click()
+    >>> 'Theme settings' in browser.contents
+    True
+
+Test create a theme
+
+    >>> browser.getLink('Create a theme').click()
+    >>> browser.getControl('name').value = 'mytheme'
+    >>> browser.getControl('Version').value = '1.8.9'
+    >>> browser.getControl('Save').click()
+    >>> 'Changes saved.' in browser.contents
+    True
+
+Lets make some tests around what happens. At this time you have query jqueryui.com
+download an zip archive containing a full jqueryui 1.8.9 with a jqueryui theme default 
+configuration specified in interfaces.py.
+First we will check the content of portal_resources
+
+    >>> resources = self.portal.portal_resources
+
+Is there a jqueryuitheme folder with a css folder inside ?
+
+    >>> resources['jqueryuitheme'].id
+    'jqueryuitheme'
+    >>> resources['jqueryuitheme'].meta_type
+    'BTreeFolder2'
+    >>> resources.jqueryuitheme.css.meta_type
+    'BTreeFolder2'
+    >>> themefolder = resources.jqueryuitheme.css
+
+Is my theme has been downloaded ?
+
+    >>> 'mytheme' in themefolder.keys()
+    True
+    >>> themefolder.mytheme['jquery-ui-.custom.css'].meta_type
+    'File'
+    >>> themefolder.mytheme['jquery-ui-.custom.css'].size > 0
+    True
+    >>> images = []
+    >>> images.extend(set(themefolder.mytheme.images))
+    >>> len(images) == 12
+    True
+
+So now lets used that theme and control the import has not activated it
+
+    >>> browser.getLink('JQueryUI theme manager').click()
+    >>> browser.getLink('Select a theme').click()
+    >>> browser.getControl('Theme').value
+    'sunburst'
+    >>> browser.getControl('Theme').value = 'mytheme'
+    >>> browser.getControl('Save').click()
+
+Now check the resources has been registred in portal_css
+
