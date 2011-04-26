@@ -13,7 +13,6 @@ from collective.jqueryuithememanager import config
 #    themes.append(vocabulary.SimpleTerm(theme, theme, theme))
 #theme_vocabulary = vocabulary.SimpleVocabulary(themes)
 
-THEME_RESOURCE_NAME = "jqueryuitheme"
 
 class IJQueryUIThemeManagerLayer(interface.Interface):
     """Browser layer"""

@@ -20,9 +20,7 @@ from collective.jqueryuithememanager import config
 from collective.jqueryuithememanager import interfaces
 from collective.jqueryuithememanager import logger
 from zExceptions import NotFound
-
-BASE = "http://jqueryui.com/themeroller/?ctl=themeroller&"
-SUNBURST_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.9.custom.css"
+from zExceptions import BadRequest
 
 class JQueryUIThemeVocabularyFactory(object):
     """Vocabulary for jqueryui themes.
@@ -60,24 +58,25 @@ def importTheme(themeArchive):
             basename = os.path.basename(path)
             if basename.startswith('jquery-ui'):
                 infos['version'] = basename[len('jquery-ui-'):len('.custom.min.js')]
-        themeContainer = getThemeDirectory()
+    if 'version' not in infos:
+        raise ValueError('Not a JQueryUI package')
+    themeContainer = getThemeDirectory()
     themeContainer.importZip(themeZip)
     for i in ('index.html', 'development-bundle', 'js'):
-        del themeContainer[i]
-#    oldTheme = getCurrentThemeId()
-#    unregisterTheme(oldTheme)
-#    registerTheme(infos['name'])
-#    setCurrentThemeId(infos['name'])
+        try:
+            del themeContainer[i]
+        except BadRequest, e:
+            raise TypeError('Not a JQueryUI package')
 
 def getThemeDirectory():
     """Obtain the 'jqueryuitheme' persistent resource directory,
     creating it if necessary.
     """
     persistentDirectory = component.getUtility(IResourceDirectory, name="persistent")
-    if interfaces.THEME_RESOURCE_NAME not in persistentDirectory:
-        persistentDirectory.makeDirectory(interfaces.THEME_RESOURCE_NAME)
+    if config.THEME_RESOURCE_NAME not in persistentDirectory:
+        persistentDirectory.makeDirectory(config.THEME_RESOURCE_NAME)
 
-    return persistentDirectory[interfaces.THEME_RESOURCE_NAME]
+    return persistentDirectory[config.THEME_RESOURCE_NAME]
 
 def getThemes():
     """Return the list of available themes"""
@@ -92,33 +91,31 @@ def getCurrentThemeId():
     registry = component.getUtility(IRegistry).forInterface(interfaces.IJQueryUIThemeSettings)
     return registry.theme
 
+def getCurrentThemeStyleSheetId():
+    themeid = getCurrentThemeId()
+    return config.BASE_CSS_PATH%themeid
+
 def setCurrentThemeId(themeid):
     """Set the current theme configuration to themeid"""
     registry = component.getUtility(IRegistry).forInterface(interfaces.IJQueryUIThemeSettings)
     registry.theme = themeid
 
 def unregisterTheme(themeid):
-    """Disable stylesheet corresponding to the theme"""
+    """Disable stylesheet corresponding to the themeid"""
     logger.info('unregisterTheme %s'%themeid)
     plone = component.getSiteManager()
     csstool = plone.portal_css
     if themeid in ('collective.js.jqueryui','sunburst'):
-        stylesheet = csstool.getResourcesDict()[SUNBURST_CSS_ID]
+        stylesheet = csstool.getResourcesDict()[config.SUNBURST_CSS_ID]
         stylesheet.setEnabled(False)
         csstool.cookResources()
         return
 
     #a theme in persistent directory
-    BASE = 'portal_resources/%s/css/'%interfaces.THEME_RESOURCE_NAME
     themeContainer = getThemeDirectory()
     try:
-        ids = themeContainer['css'][themeid].listDirectory()
-        css_id = None
-        for id in ids:
-            if id.endswith('css'):
-                css_id = id
-        old_resource = BASE+themeid+'/'+css_id
-        stylesheet = csstool.getResourcesDict()[old_resource]
+        stylesheetid = getCurrentThemeStyleSheetId()
+        stylesheet = csstool.getResourcesDict()[stylesheetid]
         stylesheet.setEnabled(False)
         csstool.cookResources()
     except NotFound, e:
@@ -137,26 +134,20 @@ def registerTheme(themeid):
     
     if themeid in ('collective.js.jqueryui', 'sunburst'):
         #just activate it
-        stylesheet = csstool.getResourcesDict()[SUNBURST_CSS_ID]
+        stylesheet = csstool.getResourcesDict()[config.SUNBURST_CSS_ID]
         stylesheet.setEnabled(True)
         csstool.cookResources()
         return
 
     #a theme in persistent directory
-    BASE = 'portal_resources/%s/css/'%interfaces.THEME_RESOURCE_NAME
     themeContainer = getThemeDirectory()
     try:
-        ids = themeContainer['css'][themeid].listDirectory()
-        css_id = None
-        for id in ids:
-            if id.endswith('css'):
-                css_id = id
-        resource = BASE+themeid+'/'+css_id
+        stylesheetid = getCurrentThemeStyleSheetId()
         #check if already registred
-        stylesheet = csstool.getResourcesDict().get(resource, None)
+        stylesheet = csstool.getResourcesDict().get(stylesheetid, None)
         if stylesheet is None:
-            csstool.registerStylesheet(resource)
-        stylesheet = csstool.getResourcesDict().get(resource, None)
+            csstool.registerStylesheet(stylesheetid)
+        stylesheet = csstool.getResourcesDict()[stylesheetid]
         stylesheet.setApplyPrefix(True)
         stylesheet.setEnabled(True)
         csstool.cookResources()
@@ -169,8 +160,8 @@ def download_theme(data):
     """Download the themezip directly from jqueryui.com
     """
 
-    BASE = "http://jqueryui.com/download/?download=true"
-    query = ''
+    BASE = "http://jqueryui.com/download/"
+    query = 'download=true'
 
     for file in config.FILES:
         query += '&files[]='+file
@@ -183,10 +174,10 @@ def download_theme(data):
     del datac['version']
     for key in datac:
         if 'Texture' in key: datac[key] = '01_flat.png' #force to use flat
-    theme = urlencode(datac).replace('%23','')
-    query+='&theme=?'+quote(theme)
-
-    download = urlopen(BASE, query)
+    theme = urlencode(datac).replace('%23','') # %23 is # and we don't want this in color code
+    query+='&theme=%3F'+quote(theme)
+    logger.info('download : %s/?%s'%(BASE, query))
+    download = urlopen(BASE+'?'+query)
     code = download.getcode()
 
     if code != 200:
@@ -195,4 +186,7 @@ def download_theme(data):
         raise Exception, 'Is not a zip file'
     content = download.read()
     sio = StringIO.StringIO(content)
+    f = open('test.zip', 'wb')
+    f.write(content)
+    f.close()
     importTheme(sio)

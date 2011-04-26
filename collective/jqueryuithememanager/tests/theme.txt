@@ -74,5 +74,46 @@ So now lets used that theme and control the import has not activated it
     >>> browser.getControl('Theme').value = 'mytheme'
     >>> browser.getControl('Save').click()
 
-Now check the resources has been registred in portal_css
+Now check the resources has been registred in portal_css and the default one
+has been unactivated
 
+    >>> from collective.jqueryuithememanager import config
+    >>> csstool = self.portal.portal_css
+    >>> defaultcss = csstool.getResourcesDict()[config.SUNBURST_CSS_ID]
+    >>> currentcss = csstool.getResourcesDict()[config.BASE_CSS_PATH%'mytheme']
+    >>> defaultcss.getEnabled()
+    False
+    >>> currentcss.getEnabled()
+    True
+    >>> currentcss.getApplyPrefix()
+    True
+
+
+Last but not least, we will upload a jqueryui theme zip archive, and next check 
+every things goes well. So first we download a zip from google code
+
+    >>> import urllib
+    >>> import cStringIO
+    >>> jqueryui_content = urllib.urlopen(config.ZIP_JQUERYUI_URL).read()
+    >>> jqueryui_zip = cStringIO.StringIO(jqueryui_content)
+    >>> DELETEME = open('test.zip','w')
+    >>> DELETEME.write(jqueryui_content)
+    >>> DELETEME.close()
+
+Next we go back to jqueryui controlpanel to select 'Import a theme'
+
+    >>> browser.getLink('JQueryUI theme manager').click()
+    >>> browser.getLink('Import a theme').click()
+    >>> ctrl = browser.getControl('Theme archive')
+    >>> ctrl.value is None
+    True
+    >>> ctrl.add_file(jqueryui_zip, 'application/zip', 'jqueryui.zip')
+    >>> browser.getControl('Import').click()
+
+    >>> import tempfile as tmp
+    >>> def contents():
+    ...    fd, fn = tmp.mkstemp(suffix=".html", prefix="testbrowser-")
+    ...    file = open(fn, 'w')
+    ...    file.write(browser.contents)
+    ...    file.close()
+    ...    print fn

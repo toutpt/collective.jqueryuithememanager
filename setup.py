@@ -29,6 +29,7 @@ setup(name='collective.jqueryuithememanager',
           'collective.z3cform.colorpicker',
           'plone.app.registry',
           'plone.resource',
+          'plone.namedfile',
           # -*- Extra requirements: -*-
       ],
       extras_require = dict(

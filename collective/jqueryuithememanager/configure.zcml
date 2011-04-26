@@ -43,9 +43,12 @@
   <browser:page
     for="*"
     name="jqueryui-import-theme"
-    class=".controlpanel.ImportThemeForm"
-    template="controlpanel_import.pt"
+    class=".controlpanel.ImportThemeFormWrapper"
     permission="cmf.ManagePortal"
+    />
+  <browser:resource
+    name="jqueryui_icon.jpg"
+    file="jqueryui_icon.jpg"
     />
 
   <subscriber handler=".controlpanel.handleRegistryModified" />

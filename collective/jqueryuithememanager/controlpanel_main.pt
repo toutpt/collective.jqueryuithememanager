@@ -24,7 +24,7 @@
         Use this control panel to manage jqueryui themes.
     </p>
     <ul>
-        <li><a href="" tal:attributes="href string:${view/context/absolute_url}/@@jqueryui-import-theme">Import a JQueryUI Theme</a></li>
+        <li><a href="" tal:attributes="href string:${view/context/absolute_url}/@@jqueryui-import-theme">Import a theme</a></li>
         <li><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-custom-controlpanel">Create a theme</a></li>
         <li><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-select">Select a theme</a></li>
     </ul>
