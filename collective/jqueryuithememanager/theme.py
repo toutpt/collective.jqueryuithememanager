@@ -52,16 +52,26 @@ def importTheme(themeArchive):
         member = themeZip.getinfo(name)
         path = member.filename.lstrip('/')
         starter = path.split('/')[0]
-        if starter =='css' and 'name' not in infos:
-            infos['name'] = path.split('/')[1]
+        if starter =='css' and 'id' not in infos:
+            infos['id'] = path.split('/')[1]
         if starter == 'js' and 'version' not in infos:
             basename = os.path.basename(path)
             if basename.startswith('jquery-ui'):
-                infos['version'] = basename[len('jquery-ui-'):len('.custom.min.js')]
+                infos['version'] = basename[len('jquery-ui-'):-len('.custom.min.js')]
     if 'version' not in infos:
         raise ValueError('Not a JQueryUI package')
     themeContainer = getThemeDirectory()
     themeContainer.importZip(themeZip)
+    #register stylesheet and make it disabled
+    stylesheetid = config.BASE_CSS_PATH%infos
+    plone = component.getSiteManager()
+    csstool = plone.portal_css
+    stylesheet = csstool.getResourcesDict().get(stylesheetid, None)
+    if stylesheet is None:
+        csstool.registerStylesheet(stylesheetid)
+    stylesheet = csstool.getResourcesDict()[stylesheetid]
+    stylesheet.setEnabled(False)
+    
     for i in ('index.html', 'development-bundle', 'js'):
         try:
             del themeContainer[i]
@@ -91,9 +101,19 @@ def getCurrentThemeId():
     registry = component.getUtility(IRegistry).forInterface(interfaces.IJQueryUIThemeSettings)
     return registry.theme
 
-def getCurrentThemeStyleSheetId():
-    themeid = getCurrentThemeId()
-    return config.BASE_CSS_PATH%themeid
+def getCurrentThemeStyleSheetId(csstool, themeid=None):
+    if themeid is None:
+        themeid = getCurrentThemeId()
+    #TODO; find the version
+    stylesheets = csstool.getResourcesDict()
+    for sid in stylesheets:
+        if themeid == 'sunburst':
+            if not sid.startswith('++resource++jquery-ui-themes/sunburst'):continue
+            if sid.endswith('patch.css'):continue
+            return sid
+            version = sid[len("++resource++jquery-ui-themes/sunburst/jquery-ui-"):-len(".custom.css")]
+        if not sid.startswith('portal_resources/jqueryuitheme/css/%s'%themeid):continue
+        return sid
 
 def setCurrentThemeId(themeid):
     """Set the current theme configuration to themeid"""
@@ -106,15 +126,18 @@ def unregisterTheme(themeid):
     plone = component.getSiteManager()
     csstool = plone.portal_css
     if themeid in ('collective.js.jqueryui','sunburst'):
-        stylesheet = csstool.getResourcesDict()[config.SUNBURST_CSS_ID]
-        stylesheet.setEnabled(False)
+        stylesheets = csstool.getResourcesDict()
+        for stylesheetid in stylesheets:
+            if stylesheetid.startswith('++resource++jquery-ui-themes/sunburst'):
+                stylesheet = stylesheets[stylesheetid]
+                stylesheet.setEnabled(False)
         csstool.cookResources()
         return
 
     #a theme in persistent directory
     themeContainer = getThemeDirectory()
     try:
-        stylesheetid = getCurrentThemeStyleSheetId()
+        stylesheetid = getCurrentThemeStyleSheetId(csstool, themeid=themeid)
         stylesheet = csstool.getResourcesDict()[stylesheetid]
         stylesheet.setEnabled(False)
         csstool.cookResources()
@@ -125,8 +148,7 @@ def unregisterTheme(themeid):
 
 def registerTheme(themeid):
     """Check if the css is already registred in the css tool.
-    If already registred -> just activate it
-    else register it and activate it
+    The stylesheet must be registred in portal_css.
     """
     logger.info('registerTheme %s'%themeid)
     plone = component.getSiteManager()
@@ -134,19 +156,16 @@ def registerTheme(themeid):
     
     if themeid in ('collective.js.jqueryui', 'sunburst'):
         #just activate it
-        stylesheet = csstool.getResourcesDict()[config.SUNBURST_CSS_ID]
-        stylesheet.setEnabled(True)
+        stylesheets = csstool.getResourcesDict()
+        for stylesheetid in stylesheets:
+            if stylesheetid.startswith('++resource++jquery-ui-themes/sunburst'):
+                stylesheet = stylesheets[stylesheetid]
+                stylesheet.setEnabled(True)
         csstool.cookResources()
         return
 
-    #a theme in persistent directory
-    themeContainer = getThemeDirectory()
     try:
-        stylesheetid = getCurrentThemeStyleSheetId()
-        #check if already registred
-        stylesheet = csstool.getResourcesDict().get(stylesheetid, None)
-        if stylesheet is None:
-            csstool.registerStylesheet(stylesheetid)
+        stylesheetid = getCurrentThemeStyleSheetId(csstool, themeid=themeid)
         stylesheet = csstool.getResourcesDict()[stylesheetid]
         stylesheet.setApplyPrefix(True)
         stylesheet.setEnabled(True)

@@ -13,7 +13,7 @@ CDN_URL = 'http://ajax.googleapis.com/ajax/libs/jqueryui/%s/themes/%s/jquery-ui.
 BASE_JQUERYUI_URL = "http://jqueryui.com/themeroller/?ctl=themeroller&"
 ZIP_JQUERYUI_URL = "https://github.com/jquery/jquery-ui/zipball/1.8.9"
 SUNBURST_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.9.custom.css"
-BASE_CSS_PATH = "portal_resources/jqueryuitheme/css/%s/jquery-ui-.custom.css"
+BASE_CSS_PATH = "portal_resources/jqueryuitheme/css/%(id)s/jquery-ui-%(version)s.custom.css"
 THEME_RESOURCE_NAME = "jqueryuitheme"
 
 THEME_SETTINGS = ('fwDefault',
