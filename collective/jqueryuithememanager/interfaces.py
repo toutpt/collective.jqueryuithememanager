@@ -28,6 +28,42 @@ class IJQueryUIThemeSettings(interface.Interface):
 #                          required=True,
 #                          vocabulary='collective.jqueryuithememanager.vocabularies.themes')
 
+class IJQueryUITheme(interface.Interface):
+    """A JQueryUI Theme object"""
+    
+    stylesheetid = schema.ASCIILine(title=u"Stylesheet ID")
+    
+    version = schema.ASCIILine(title=u"Version of JQueryUI")
+
+    def activate():
+        """set enabled to True to the stylesheet in css registry"""
+    
+    def unactivate():
+        """set enabled to False to the stylesheet in css registry"""
+
+    def setupFromZip(themeArchive):
+        """Setup theme from a zip file. Raise TypeError if the zip file is not 
+        jqueryui theme"""
+
+class IJQueryUIThemeManager(interface.Interface):
+    """A IJQueryUITheme manager"""
+    
+    def getThemesIds():
+        """Return a list of all theme ids"""
+
+    def getThemeById(id):
+        """Return a IJQueryUITheme. If id doesn't exists, it creates a new one"""
+
+    def getDefaultThemeId():
+        """Return the default theme id"""
+    
+    def setDefaultThemeId(id):
+        """Set the default theme used by the theme manager"""
+
+    def downloadTheme(data):
+        """Download theme from jqueryui.com base on provided properties.
+        return IJQueryUITheme object
+        """
 
 class IJQueryUITheme(interface.Interface):
     """Define a JQuery UI Theme"""

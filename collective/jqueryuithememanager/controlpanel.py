@@ -40,7 +40,8 @@ class CustomControlPanelForm(RegistryEditForm):
     
     def applyChanges(self, data):
         super(CustomControlPanelForm, self).applyChanges(data)
-        theme.download_theme(data)
+        tm = theme.ThemeManager()
+        tm.downloadTheme(data)
 
 CustomControlPanelView = layout.wrap_form(CustomControlPanelForm,
                                      ControlPanelFormWrapper)
@@ -73,8 +74,8 @@ CustomControlPanelView.label = i18n.customcontrolpanel_label
 #        return True
 
 class IImportThemeForm(interface.Interface):
-    """prout"""
-    
+    """Import Theme Form"""
+
     themeArchive = schema.Bytes(title=u"Theme archive")
 
 class ImportThemeForm(AutoExtensibleForm, form.Form):
@@ -92,7 +93,8 @@ class ImportThemeForm(AutoExtensibleForm, form.Form):
         sio = StringIO.StringIO()
         sio.write(data['themeArchive'])
         try:
-            theme.importTheme(sio)
+            tm = theme.ThemeManager()
+            t = tm.getThemeFromZip(sio)
             IStatusMessage(self.request).addStatusMessage(u"Theme imported. You may want to select this theme.")
             self.request.response.redirect("%s/%s" % (self.context.absolute_url(), self.parent_view))
         except TypeError, e:
@@ -115,5 +117,9 @@ def handleRegistryModified(settings, event):
     #FIRST: remove old resource
     oldtheme = None
     if event.record.fieldName == 'theme':
-        theme.unregisterTheme(event.oldValue)
-        theme.registerTheme(settings.theme)
+        tm = theme.ThemeManager()
+        oldtheme = tm.getThemeById(event.oldValue)
+        newtheme = tm.getThemeById(settings.theme)
+        
+        oldtheme.unactivate()
+        newtheme.activate()
