@@ -37,3 +37,16 @@ class FakeStyleSheet:
 
     def setApplyPrefix(self, value):
         self.prefixed = value
+
+class FakeSite:
+    def __init__(self):
+        self.portal_css = FakeCSSTool()
+
+class FakeRegistry:
+    def __init__(self):
+        self.theme = 'sunburst'
+
+
+class FakeResourceDirectory:
+    def __init__(self):
+        pass

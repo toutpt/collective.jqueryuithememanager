@@ -30,12 +30,16 @@ class JQueryUIThemeVocabularyFactory(object):
     def __call__(self, context):
         """Retrieve available themes inside persistent resource and add
         sunburst and collective.js.jqueryui themes"""
-
-#        items = getThemes()
-#        items = [(i, i) for i in items]
-        items = [('jqueryui', 'jqueryui'),
-                 ('sunburst', 'sunburst')]
-        return SimpleVocabulary.fromItems(items)
+        tm = ThemeManager()
+        items = [('sunburst','sunburst')]
+        try:
+            ids = tm.getThemeIds()
+            for id in ids:
+                items.append((id, id))
+            return SimpleVocabulary.fromItems(items)
+        except TypeError:
+            logger.info('kss inline validation fails. getSite doesn t return Plone site')
+            return SimpleVocabulary.fromItems(items)
 
 JQueryUIThemeVocabulary = JQueryUIThemeVocabularyFactory()
 
@@ -48,7 +52,6 @@ class ThemeManager(object):
         self._themeid = None
         self._settings = None
         self._csstool = None
-        self._currentTheme = None
         self._themedirectory = None
     
     def site(self):
@@ -68,10 +71,6 @@ class ThemeManager(object):
         return self._settings
 
 
-    def importTheme(self, themeArchive):
-        """Import a zipfile as persistent resource"""
-        pass
-
     def getThemeDirectory(self):
         """Obtain the 'jqueryuitheme' persistent resource directory,
         creating it if necessary.
@@ -89,7 +88,6 @@ class ThemeManager(object):
 
     def getThemeIds(self):
         """Return the list of available themes"""
-        items = []
         site = self.site()
         themeContainer = self.getThemeDirectory()
         themes = themeContainer['css'].listDirectory()
@@ -149,18 +147,55 @@ class ThemeManager(object):
         theme = self.getThemeFromZip(sio)
         return theme
 
+
+
+    def getThemesFromZip(self, themeArchive):
+        themes = []
+        themeZip = checkZipFile(themeArchive)
+        folder = self.getThemeDirectory()
+        cssids = []
+        for name in themeZip.namelist():
+            member = themeZip.getinfo(name)
+            path = member.filename.lstrip('/')
+            isThemesFolder = path.split('/')[1] == "themes"
+
+            #check if it is a simple theme
+            starter = path.split('/')[0]
+            if starter =='css' and path.endswith('.custom.css'):
+                return [self.getThemeFromZip(themeArchive)]
+
+            if not isThemesFolder: continue
+            newpath = 'css/'+'/'.join(path.split('/')[2:])
+            if newpath.endswith('/'):
+                folder.makeDirectory(newpath)
+            else:
+                data = themeZip.open(member).read()
+                folder.writeFile(newpath, data)
+            if newpath.endswith('/jquery-ui.css'):
+                cssids.append('portal_resources/jqueryuitheme/'+newpath)
+        
+        csstool = self.csstool()
+        resources = csstool.getResourcesDict()
+        for stylesheetid in cssids:
+            stylesheet = resources.get(stylesheetid, None)
+            if stylesheet is None:
+                csstool.registerStylesheet(stylesheetid)
+            themeid = stylesheetid.split('/')[3]
+            theme = self.getThemeById(themeid)
+            theme.unactivate()
+            themes.append(theme)
+
+        return themes
+    
     def getThemeFromZip(self, themeArchive):
         """Extract archive and store into container. set values of theme from it"""
-        try:
-            themeZip = zipfile.ZipFile(themeArchive)
-        except (zipfile.BadZipfile, zipfile.LargeZipFile,):
-            logger.exception("Could not read zip file")
-            raise TypeError('error_invalid_zip')
+        themeZip = checkZipFile(themeArchive)
 
         version = None
         folder = self.getThemeDirectory()
         themeid = None
         stylesheetid = None
+        multitheme = False
 
         for name in themeZip.namelist():
             member = themeZip.getinfo(name)
@@ -173,6 +208,11 @@ class ThemeManager(object):
                 basename = os.path.basename(path)
                 if basename.startswith('jquery-ui'):
                     version = basename[len('jquery-ui-'):-len('.custom.min.js')]
+            if path.split('/')[1] == 'themes':
+                multitheme = True
+
+        if multitheme:
+            return self.getThemesFromZip(themeArchive)
 
         if version is None:
             raise ValueError('Not a JQueryUI package')
@@ -187,6 +227,7 @@ class ThemeManager(object):
         
         theme = self.getThemeById(themeid)
 
+        #clean up things
         for i in ('index.html', 'development-bundle', 'js'):
             try:
                 del folder[i]
@@ -288,3 +329,12 @@ class PersistentTheme(object):
             csstool.cookResources()
         except KeyError, e:
             logger.info('the old theme has not been found in resource directory')
+
+def checkZipFile(archive):
+    """Raise exception if not a zip"""
+    try:
+        themeZip = zipfile.ZipFile(archive)
+    except (zipfile.BadZipfile, zipfile.LargeZipFile,):
+        logger.exception("Could not read zip file")
+        raise TypeError('error_invalid_zip')
+    return themeZip

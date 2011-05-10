@@ -20,13 +20,13 @@ class IJQueryUIThemeManagerLayer(interface.Interface):
 class IJQueryUIThemeSettings(interface.Interface):
     """JQueryUIThem settings"""
 
-    theme = schema.ASCIILine(title=i18n.label_theme,
-                             default='sunburst',
-                             required=True)
-#                          vocabulary='collective.jqueryuithememanager.vocabularies.themes')
-#    theme = schema.Choice(title=i18n.label_theme,
-#                          required=True,
-#                          vocabulary='collective.jqueryuithememanager.vocabularies.themes')
+#    theme = schema.ASCIILine(title=i18n.label_theme,
+#                             default='sunburst',
+#                             required=True)
+
+    theme = schema.Choice(title=i18n.label_theme,
+                          required=True,
+                          vocabulary='collective.jqueryuithememanager.vocabularies.themes')
 
 class IJQueryUITheme(interface.Interface):
     """A JQueryUI Theme object"""
@@ -40,10 +40,6 @@ class IJQueryUITheme(interface.Interface):
     
     def unactivate():
         """set enabled to False to the stylesheet in css registry"""
-
-    def setupFromZip(themeArchive):
-        """Setup theme from a zip file. Raise TypeError if the zip file is not 
-        jqueryui theme"""
 
 class IJQueryUIThemeManager(interface.Interface):
     """A IJQueryUITheme manager"""
@@ -64,6 +60,11 @@ class IJQueryUIThemeManager(interface.Interface):
         """Download theme from jqueryui.com base on provided properties.
         return IJQueryUITheme object
         """
+
+    def getThemesFromZip(themeArchive):
+        """Import themes from themeArchive. The archive must have a 'themes'
+        folder at second level"""
+
 
 class IJQueryUITheme(interface.Interface):
     """Define a JQuery UI Theme"""

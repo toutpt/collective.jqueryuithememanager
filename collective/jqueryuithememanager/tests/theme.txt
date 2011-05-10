@@ -71,6 +71,7 @@ So now lets used that theme and control the import has not activated it
     >>> browser.getLink('Select a theme').click()
     >>> browser.getControl('Theme').value
     'sunburst'
+    >>> import pdb; pdb.set_trace()
     >>> browser.getControl('Theme').value = 'mytheme'
     >>> browser.getControl('Save').click()
 

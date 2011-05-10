@@ -94,7 +94,7 @@ class ImportThemeForm(AutoExtensibleForm, form.Form):
         sio.write(data['themeArchive'])
         try:
             tm = theme.ThemeManager()
-            t = tm.getThemeFromZip(sio)
+            themes = tm.getThemesFromZip(sio)
             IStatusMessage(self.request).addStatusMessage(u"Theme imported. You may want to select this theme.")
             self.request.response.redirect("%s/%s" % (self.context.absolute_url(), self.parent_view))
         except TypeError, e:
