@@ -101,7 +101,7 @@ class ThemeManager(object):
         if id == "sunburst":
             return SunburstTheme(id, self)
 
-        return PersistentTheme(id, self, folder=self.getThemeDirectory())
+        return PersistentTheme(id, self)
 
     def getDefaultThemeId(self):
         """Return the configuration themeid currently used"""
@@ -244,12 +244,11 @@ class SunburstTheme(object):
 class PersistentTheme(object):
     """A theme store in plone.Resource"""
     interface.implements(interfaces.IJQueryUITheme)
-    def __init__(self, id, manager, folder=None):
+    def __init__(self, id, manager):
         self.id = id
         self.version = None
         self.manager = manager
         self._site = None
-        self._folder = folder
         self.stylesheetid = None
         self.initialize()
 
@@ -268,7 +267,7 @@ class PersistentTheme(object):
 
         start_index = len('portal_resources/jqueryuitheme/css/%s/jquery-ui-'%self.id)
         end_index = len('.custom.css')
-        self.version = self.stylesheetid[start_index:end_index]
+        self.version = self.stylesheetid[start_index:-end_index]
 
 
     def activate(self):
