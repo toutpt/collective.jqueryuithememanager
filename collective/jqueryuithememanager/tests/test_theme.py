@@ -3,18 +3,31 @@ import unittest2 as unittest
 
 from Testing import ZopeTestCase as ztc
 import base
+import utils
 
-def test_suite():
+class SunburstThemeTestCase(base.UnitTestCase):
+    
+    def setUp(self):
+        super(SunburstThemeTestCase, self).setUp()
+        from collective.jqueryuithememanager import theme
+        self.theme = theme.SunburstTheme("sunburst", utils.FakeManager())
+    
+    def test_stylesheetid(self):
+        self.failUnless(self.theme.stylesheetid == utils.JQUERYUI_CSS_ID)
+    
+    def test_version(self):
+        self.failUnless(self.theme.version == utils.JQUERYUI_CSS_VERSION)
 
-    TEST_CLASS = base.FunctionalTestCase
-    OPTIONFLAGS = (doctest.REPORT_ONLY_FIRST_FAILURE |
-                        doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS)
-    return unittest.TestSuite([
+    def test_activate(self):
+        stylesheet = self.theme.manager.csstool().getResourcesDict()[utils.JQUERYUI_CSS_ID]
+        self.failUnless(stylesheet.enabled) #must be enabled
+        stylesheet.enabled = False
+        self.theme.activate()
+        self.failUnless(stylesheet.enabled) #must have been unabled
 
-        ztc.ZopeDocFileSuite(
-            'theme.txt',package='collective.jqueryuithememanager.tests',
-            test_class=TEST_CLASS,
-            optionflags=OPTIONFLAGS
-            ),
-
-        ])
+    def test_unactivate(self):
+        stylesheet = self.theme.manager.csstool().getResourcesDict()[utils.JQUERYUI_CSS_ID]
+        self.failUnless(stylesheet.enabled) #must be enabled
+        self.theme.unactivate()
+        self.failUnless(not stylesheet.enabled) #must have been unabled
+ 

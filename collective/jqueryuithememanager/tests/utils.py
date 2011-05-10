@@ -1,82 +1,31 @@
+JQUERYUI_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.12.custom.css"
+JQUERYUI_CSS_VERSION = "1.8.12"
 
-class FakeAcquisition(object):
+class FakeManager:
     def __init__(self):
-        self.aq_explicit = None
-
-class FakeContext(object):
-
+        self._tool = FakeCSSTool()
+    
+    def csstool(self):
+        return self._tool
+    
+class FakeCSSTool:
     def __init__(self):
-        self.id = "myid"
-        self.title = "a title"
-        self.description = "a description"
-        self.creators = ["myself"]
-        self.date="a date"
-        self.aq_inner = FakeAcquisition()
-        self.aq_inner.aq_explicit = self
-        self._modified = "modified date"
-        self.remoteUrl = '' #fake Link
+        self.resources = {}
+        self.registerStylesheet(JQUERYUI_CSS_ID)
 
-    def getId(self):
-        return self.id
+    def getResourcesDict(self):
+        return self.resources
+    
+    def registerStylesheet(self, id):
+        self.resources[id] = FakeStyleSheet()
+        self.resources[id].setEnabled(True)
+    
+    def cookResources(self):
+        pass
 
-    def Title(self):
-        return self.title
-
-    def Creators(self):
-        return self.creators
-
-    def Description(self):
-        return self.description
-
-    def Date(self):
-        return self.date
-
-    def modified(self):
-        return self._modified
-
-    def getPhysicalPath(self):
-        return ('/','a','not','existing','path')
-
-    def getFolderContents(self, filter=None):
-        catalog = FakeCatalog()
-        return catalog.searchResults()
-
-    def absolute_url(self):
-        return "http://nohost.com/"+self.id
-
-    def queryCatalog(self, **kwargs): #fake Topic
-        catalog = FakeCatalog()
-        return catalog.searchResults()
-
-    def getRemoteUrl(self): #fake Link
-        return self.remoteUrl
-
-    def modified(self): #for ram cache key
-        return "a modification date"
-
-class FakeBrain(object):
+class FakeStyleSheet:
     def __init__(self):
-        self.Title = ""
-        self.Description = ""
-        self.getId = ""
-
-    def getURL(self):
-        return "http://fakebrain.com"
-
-    def getObject(self):
-        ob = FakeContext()
-        ob.title = self.Title
-
-        return ob
-
-class FakeCatalog(object):
-    def searchResults(self, **kwargs):
-        brain1 = FakeBrain()
-        brain1.Title = "My first article"
-        brain2 = FakeBrain()
-        brain2.Title = "A great event"
-        brain2.Description = "you will drink lots of beer"
-        return [brain1, brain2]
-
-    def modified(self):
-        return '654654654654'
+        self.enabled = None
+    
+    def setEnabled(self, value):
+        self.enabled = value
