@@ -120,6 +120,5 @@ def handleRegistryModified(settings, event):
         tm = theme.ThemeManager()
         oldtheme = tm.getThemeById(event.oldValue)
         newtheme = tm.getThemeById(settings.theme)
-        
         oldtheme.unactivate()
         newtheme.activate()

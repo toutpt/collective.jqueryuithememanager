@@ -31,15 +31,12 @@ class JQueryUIThemeVocabularyFactory(object):
         """Retrieve available themes inside persistent resource and add
         sunburst and collective.js.jqueryui themes"""
         tm = ThemeManager()
-        items = [('sunburst','sunburst')]
         try:
-            ids = tm.getThemeIds()
-            for id in ids:
-                items.append((id, id))
+            items = [(id, id) for id in tm.getThemeIds()]
             return SimpleVocabulary.fromItems(items)
         except TypeError:
-            logger.info('kss inline validation fails. getSite doesn t return Plone site')
-            return SimpleVocabulary.fromItems(items)
+            logger.info('kss inline validation ... getSite doesn t return Plone site')
+            return SimpleVocabulary.fromItems(('sunburst','sunburst'))
 
 JQueryUIThemeVocabulary = JQueryUIThemeVocabularyFactory()
 
@@ -88,11 +85,12 @@ class ThemeManager(object):
 
     def getThemeIds(self):
         """Return the list of available themes"""
-        site = self.site()
         themeContainer = self.getThemeDirectory()
         themes = themeContainer['css'].listDirectory()
         #TODO: add sunburst
-        return map(str, themes)
+        themes = map(str, themes)
+        themes.insert(0,'sunburst')
+        return themes
     
     def getThemeById(self, id):
         """Return IJQueryUITheme object"""
@@ -114,7 +112,7 @@ class ThemeManager(object):
     def downloadTheme(self, data):
         """Download the themezip directly from jqueryui.com
         """
-    
+
         BASE = "http://jqueryui.com/download/"
         query = 'download=true'
     
@@ -157,7 +155,11 @@ class ThemeManager(object):
         for name in themeZip.namelist():
             member = themeZip.getinfo(name)
             path = member.filename.lstrip('/')
-            isThemesFolder = path.split('/')[1] == "themes"
+            try:
+                isThemesFolder = path.split('/')[1] == "themes"
+            except IndexError:
+                pass
+
 
             #check if it is a simple theme
             starter = path.split('/')[0]
@@ -208,8 +210,12 @@ class ThemeManager(object):
                 basename = os.path.basename(path)
                 if basename.startswith('jquery-ui'):
                     version = basename[len('jquery-ui-'):-len('.custom.min.js')]
-            if path.split('/')[1] == 'themes':
-                multitheme = True
+            if starter == 'development-bundle':
+                continue
+            try:
+                if path.split('/')[1] == 'themes': multitheme = True
+            except IndexError:
+                pass
 
         if multitheme:
             return self.getThemesFromZip(themeArchive)

@@ -1,3 +1,10 @@
+try:
+    from collective.js.jqueryui.config import *
+except ImportError:
+    SUNBURST_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.12.custom.css"
+    VERSION = '1.8.12'
+
+
 PRELOADEDS = ('base', 'black-tie', 'blitzer', 'cupertino', 'dark-hive',
               'dot-luv','eggplant','excite-bike','flick','hot-sneaks',
               'humanity','le-frog','mint-choc','overcast', 'pepper-grinder',
@@ -7,12 +14,10 @@ PRELOADEDS = ('base', 'black-tie', 'blitzer', 'cupertino', 'dark-hive',
 CUSTOM_THEMEID = 'custom'
 BASE_THEMEID = 'sunburst'
 
-VERSION = '1.8.7'
 CDN_URL = 'http://ajax.googleapis.com/ajax/libs/jqueryui/%s/themes/%s/jquery-ui.css'
 
 BASE_JQUERYUI_URL = "http://jqueryui.com/themeroller/?ctl=themeroller&"
-ZIP_JQUERYUI_URL = "https://github.com/jquery/jquery-ui/zipball/1.8.9"
-SUNBURST_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.9.custom.css"
+ZIP_JQUERYUI_URL = "http://jquery-ui.googlecode.com/files/jquery-ui-themes-1.8.12.zip"
 BASE_CSS_PATH = "portal_resources/jqueryuitheme/css/%(id)s/jquery-ui-%(version)s.custom.css"
 THEME_RESOURCE_NAME = "jqueryuitheme"
 

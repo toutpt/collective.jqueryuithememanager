@@ -26,6 +26,7 @@ class IJQueryUIThemeSettings(interface.Interface):
 
     theme = schema.Choice(title=i18n.label_theme,
                           required=True,
+                          default='sunburst',
                           vocabulary='collective.jqueryuithememanager.vocabularies.themes')
 
 class IJQueryUITheme(interface.Interface):

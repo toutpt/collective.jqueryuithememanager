@@ -11,6 +11,15 @@ class CollectiveJQueryUIThemeManagerLayer(PloneSandboxLayer):
         # Load ZCML
         import collective.js.jqueryui
         import collective.jqueryuithememanager
+        import plone.app.registry
+        import collective.z3cform.colorpicker
+        import plone.resource
+        import plone.namedfile
+
+        self.loadZCML(package=plone.resource)
+        self.loadZCML(package=plone.namedfile)
+        self.loadZCML(package=plone.app.registry)
+        self.loadZCML(package=collective.z3cform.colorpicker)
         self.loadZCML(package=collective.js.jqueryui)
         self.loadZCML(package=collective.jqueryuithememanager)
 

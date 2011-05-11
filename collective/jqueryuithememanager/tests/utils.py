@@ -49,4 +49,31 @@ class FakeRegistry:
 
 class FakeResourceDirectory:
     def __init__(self):
+        self.themes = []
+    
+    def importZip(self, themeZip):
+        for name in themeZip.namelist():
+            member = themeZip.getinfo(name)
+            path = member.filename.lstrip('/')
+            starter = path.split('/')[0]
+            if starter =='css' and path.endswith('.custom.css'):
+                themeid = path.split('/')[1]
+                break
+        self.themes.append(themeid)
+
+    def makeDirectory(self, path):
         pass
+    
+    def writeFile(self, path, data):
+        pass
+
+    def __getitem__(self, key):
+        if key == 'css':
+            return self
+        raise IndexError(key)
+
+    def __delitem__(self, key):
+        pass
+
+    def listDirectory(self):
+        return self.themes

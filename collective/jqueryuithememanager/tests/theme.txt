@@ -69,19 +69,20 @@ So now lets used that theme and control the import has not activated it
 
     >>> browser.getLink('JQueryUI theme manager').click()
     >>> browser.getLink('Select a theme').click()
-    >>> browser.getControl('Theme').value
-    'sunburst'
-    >>> import pdb; pdb.set_trace()
-    >>> browser.getControl('Theme').value = 'mytheme'
+    >>> browser.getControl('Theme').displayOptions
+    ['sunburst', 'mytheme']
+    >>> browser.getControl('Theme').getControl('mytheme').selected = True
     >>> browser.getControl('Save').click()
+    >>> 'Changes saved' in browser.contents
+    True
 
-Now check the resources has been registred in portal_css and the default one
-has been unactivated
+INTEGRATION TEST: Now check server side resources must be registred in portal_css
+and the sunburst must be unactivated
 
     >>> from collective.jqueryuithememanager import config
     >>> csstool = self.portal.portal_css
     >>> defaultcss = csstool.getResourcesDict()[config.SUNBURST_CSS_ID]
-    >>> currentcss = csstool.getResourcesDict()[config.BASE_CSS_PATH%'mytheme']
+    >>> currentcss = csstool.getResourcesDict()['portal_resources/jqueryuitheme/css/mytheme/jquery-ui-.custom.css']
     >>> defaultcss.getEnabled()
     False
     >>> currentcss.getEnabled()
@@ -110,11 +111,6 @@ Next we go back to jqueryui controlpanel to select 'Import a theme'
     True
     >>> ctrl.add_file(jqueryui_zip, 'application/zip', 'jqueryui.zip')
     >>> browser.getControl('Import').click()
+    >>> 'Theme imported. You may want to select this theme.' in browser.contents
+    True
 
-    >>> import tempfile as tmp
-    >>> def contents():
-    ...    fd, fn = tmp.mkstemp(suffix=".html", prefix="testbrowser-")
-    ...    file = open(fn, 'w')
-    ...    file.write(browser.contents)
-    ...    file.close()
-    ...    print fn
