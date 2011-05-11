@@ -34,8 +34,6 @@ class IJQueryUITheme(interface.Interface):
     
     stylesheetid = schema.ASCIILine(title=u"Stylesheet ID")
     
-    version = schema.ASCIILine(title=u"Version of JQueryUI")
-
     def activate():
         """set enabled to True to the stylesheet in css registry"""
     

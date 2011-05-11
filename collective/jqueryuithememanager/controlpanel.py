@@ -44,6 +44,7 @@ class MainControlPanelView(BrowserView):
 class SelectThemeControlPanelForm(RegistryEditForm):
     """Select a theme control panel"""
     schema = interfaces.IJQueryUIThemeSettings
+    control_panel_view = "collective.jqueryuithememanager-controlpanel"
 
 SelectThemeControlPanelView = layout.wrap_form(SelectThemeControlPanelForm,
                                      ControlPanelFormWrapper)
@@ -53,15 +54,13 @@ SelectThemeControlPanelView.label = i18n.label_selectcontrolpanel
 class CustomControlPanelForm(RegistryEditForm):
     """Create or modify a theme control panel"""
     schema = interfaces.IJQueryUITheme
-    parent_view = "collective.jqueryuithememanager-controlpanel"
+    control_panel_view = "collective.jqueryuithememanager-controlpanel"
 
     def applyChanges(self, data):
         super(CustomControlPanelForm, self).applyChanges(data)
         tm = theme.ThemeManager()
         tm.downloadTheme(data)
         IStatusMessage(self.request).addStatusMessage(i18n.msg_customtheme_changes_saved)
-        url = "%s/%s" % (self.context.absolute_url(), self.parent_view)
-        self.request.response.redirect(url)
 
 
 CustomControlPanelView = layout.wrap_form(CustomControlPanelForm,

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-05-11 15:05+0000\n"
+"POT-Creation-Date: 2011-05-11 15:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr "Tous les thèmes ont été supprimés de la base de données."
 msgid "Cancel"
 msgstr "Annuler"
 
-#: ./controlpanel_main.pt:32
+#: ./controlpanel_main.pt:33
 msgid "Create a theme"
 msgstr "Créer (ou modifier) un thème"
 
@@ -34,7 +34,7 @@ msgstr "Les thèmes par défaut ont été chargés."
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ./controlpanel_main.pt:36
+#: ./controlpanel_main.pt:37
 #: ./i18n.py:29
 msgid "Delete a theme"
 msgstr "Supprimer un thème"
@@ -51,7 +51,7 @@ msgstr "Importer"
 msgid "Import JQueryUI Theme"
 msgstr "Importer un theme JQueryUI"
 
-#: ./controlpanel_main.pt:30
+#: ./controlpanel_main.pt:31
 msgid "Import a theme"
 msgstr "Importer un thème"
 
@@ -63,7 +63,7 @@ msgstr "Paramètre du thème JQueryUI"
 msgid "JQueryUI theme manager"
 msgstr "JQueryUI: Gestionnaire de thèmes"
 
-#: ./controlpanel_main.pt:34
+#: ./controlpanel_main.pt:35
 msgid "Load default themes"
 msgstr "Charger les thèmes par défaut"
 
@@ -71,7 +71,7 @@ msgstr "Charger les thèmes par défaut"
 msgid "Select a JQueryUI Theme"
 msgstr "Sélectionner un thème JQueryUI"
 
-#: ./controlpanel_main.pt:26
+#: ./controlpanel_main.pt:27
 msgid "Select a theme"
 msgstr "Sélectionner un thème"
 
@@ -83,7 +83,7 @@ msgstr "Le thème Sunburst ne peut pas être supprimé. C'est le thème par déf
 msgid "The archive mut provide the structure provided by http://jqueryui.com/themeroller archive."
 msgstr "L'archive doit avoir la même structure que les archives générées par http://jqueryui.com/themeroller."
 
-#: ./controlpanel_main.pt:29
+#: ./controlpanel_main.pt:30
 msgid "The example page is not activated. You must edit in ZMI the property example_activated in portal_properties/jqueryui_properties to be able to use it."
 msgstr "La page d'exemple n'est pas activée. Vous devez éditer dans la ZMI la propriété example_activated dans portal_properties/jqueryui_properties pour pouvoir l'utiliser."
 
@@ -298,7 +298,7 @@ msgstr ""
 
 #. Default: "Use this control panel to import a jqueryui theme."
 #: ./controlpanel_import.pt:23
-#: ./controlpanel_main.pt:23
+#: ./controlpanel_main.pt:24
 msgid "description_theme_settings"
 msgstr "Utiliser ce panneau de configuration pour gérer vos thèmes JQueryUI"
 
@@ -359,22 +359,22 @@ msgid "heading_theme_settings"
 msgstr "Gestion des thèmes JQueryUI"
 
 #. Default: "Create your theme with this form, no need to go on jqueryui website."
-#: ./controlpanel_main.pt:33
+#: ./controlpanel_main.pt:34
 msgid "help_controlpanel_create_theme"
 msgstr "Vous pouvez créer votre thème avec ce formulaire. Il n'est pas nécessaire d'aller sur le site de JQueryUI pour celà."
 
 #. Default: "Here you can import a theme from a zip file built on <a href=\"http://www.jqueryui.com/themeroller\">jqueryui.com/themeroller</a>"
-#: ./controlpanel_main.pt:31
+#: ./controlpanel_main.pt:32
 msgid "help_controlpanel_import_theme"
 msgstr "Vous pouvez importer un thème à partir d'une archive ZIP construite à partir de <a href=\"http://www.jqueryui.com/themeroller\">jqueryui.com/themeroller</a>"
 
 #. Default: "JQueryUI provide default themes. Just by clicking the link below you will get all default themes that fit with your version."
-#: ./controlpanel_main.pt:35
+#: ./controlpanel_main.pt:36
 msgid "help_controlpanel_load_themes"
 msgstr "JQueryUI propose des thèmes par défaut. En cliquant sur ce lien vous chargerez l'ensemble de ces thèmes."
 
 #. Default: "Themes are not selected when you create or import them. You must select a theme !"
-#: ./controlpanel_main.pt:27
+#: ./controlpanel_main.pt:28
 msgid "help_controlpanel_select_theme"
 msgstr "Les thèmes ne sont pas automatiquement sélectionné quand vous les créés ou les importés. Vous devez sélectionner un thème."
 
@@ -426,23 +426,18 @@ msgstr ""
 #. Default: "Theme"
 #: ./i18n.py:9
 msgid "label_theme"
-msgstr ""
+msgstr "Thème"
 
 #. Default: "Theme zip file"
 #: ./controlpanel_import.pt:40
 msgid "label_theme_zip"
-msgstr ""
+msgstr "Fichier ZIP de thème"
 
 #. Default: "Up to JQueryUI Settings"
 #: ./controlpanel_import.pt:16
 #: ./controlpanel_layout.pt:22
 msgid "label_up_to_jqueryuisettings"
-msgstr ""
-
-#. Default: "Up to Site Setup"
-#: ./controlpanel_main.pt:16
-msgid "label_up_to_plone_setup"
-msgstr ""
+msgstr "Aller au niveau supérieur: JQueryUI: Gestionnaire de thèmes"
 
 #. Default: "Drop shadows: Left offset"
 #: ./i18n.py:58

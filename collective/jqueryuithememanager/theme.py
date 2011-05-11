@@ -145,103 +145,80 @@ class ThemeManager(object):
         return theme
 
 
-
-    def getThemesFromZip(self, themeArchive):
-        themes = []
-        themeZip = checkZipFile(themeArchive)
-        folder = self.getThemeDirectory()
-        cssids = []
-        isThemesFolder = False
-        for name in themeZip.namelist():
-            member = themeZip.getinfo(name)
-            path = member.filename.lstrip('/')
-            try:
-                isThemesFolder = path.split('/')[1] == "themes"
-            except IndexError:
-                pass
-
-
-            #check if it is a simple theme
-            starter = path.split('/')[0]
-            if starter =='css' and path.endswith('.custom.css'):
-                return [self.getThemeFromZip(themeArchive)]
-
-            if not isThemesFolder: continue
-            newpath = 'css/'+'/'.join(path.split('/')[2:])
-            if newpath.endswith('/'):
-                folder.makeDirectory(newpath)
-            else:
-                data = themeZip.open(member).read()
-                folder.writeFile(newpath, data)
-            if newpath.endswith('/jquery-ui.css'):
-                cssids.append('portal_resources/jqueryuitheme/'+newpath)
-        
-        csstool = self.csstool()
-        resources = csstool.getResourcesDict()
-        for stylesheetid in cssids:
-            stylesheet = resources.get(stylesheetid, None)
-            if stylesheet is None:
-                csstool.registerStylesheet(stylesheetid)
-            themeid = stylesheetid.split('/')[3]
-            theme = self.getThemeById(themeid)
-            theme.unactivate()
-            themes.append(theme)
-
-        return themes
+#
+#    def getThemesFromZip(self, themeArchive):
+#        themes = []
+#        themeZip = checkZipFile(themeArchive)
+#        folder = self.getThemeDirectory()
+#        cssids = []
+#        isThemesFolder = False
+#        for name in themeZip.namelist():
+#            member = themeZip.getinfo(name)
+#            path = member.filename.lstrip('/')
+#            try:
+#                isThemesFolder = path.split('/')[1] == "themes"
+#            except IndexError:
+#                pass
+#
+#
+#            #check if it is a simple theme
+#            starter = path.split('/')[0]
+#            if starter =='css' and path.endswith('.custom.css'):
+#                return [self.getThemeFromZip(themeArchive)]
+#
+#            if not isThemesFolder: continue
+#            newpath = 'css/'+'/'.join(path.split('/')[2:])
+#            if newpath.endswith('/'):
+#                folder.makeDirectory(newpath)
+#            else:
+#                data = themeZip.open(member).read()
+#                folder.writeFile(newpath, data)
+#            if newpath.endswith('/jquery-ui.css'):
+#                cssids.append('portal_resources/jqueryuitheme/'+newpath)
+#        
+#        csstool = self.csstool()
+#        resources = csstool.getResourcesDict()
+#        for stylesheetid in cssids:
+#            stylesheet = resources.get(stylesheetid, None)
+#            if stylesheet is None:
+#                csstool.registerStylesheet(stylesheetid)
+#            themeid = stylesheetid.split('/')[3]
+#            theme = self.getThemeById(themeid)
+#            theme.unactivate()
+#            themes.append(theme)
+#
+#        return themes
     
     def getThemeFromZip(self, themeArchive):
-        """Extract archive and store into container. set values of theme from it"""
+        """Extract archive and store into container. set values of theme from it
+        
+        """
         themeZip = checkZipFile(themeArchive)
-
-        version = None
+        themes = []
+        themeids = []
         folder = self.getThemeDirectory()
-        themeid = None
-        stylesheetid = None
-        multitheme = False
 
         for name in themeZip.namelist():
             member = themeZip.getinfo(name)
             path = member.filename.lstrip('/')
-            starter = path.split('/')[0]
-            if starter =='css' and path.endswith('.custom.css') and themeid is None:
-                themeid = path.split('/')[1]
-                stylesheetid = 'portal_resources/jqueryuitheme/'+path
-            if starter == 'js' and version is None:
-                basename = os.path.basename(path)
-                if basename.startswith('jquery-ui'):
-                    version = basename[len('jquery-ui-'):-len('.custom.min.js')]
-            if starter == 'development-bundle':
-                continue
-            try:
-                if path.split('/')[1] == 'themes': multitheme = True
-            except IndexError:
-                pass
+            path_splited = path.split('/')
+            if path_splited[0] != 'developpement-bundle':continue
+            if len(path_splited)<2:continue
+            if path_splited[1] != 'themes':continue
+            themeid = path_splited[2]
+            if themeid not in themeids:
+                themeids.append(themeid)
+            newpath = 'portal_resources/jqueryuitheme/' + themeid + '/'
+            folder.makeDirectory(newpath)
+            folder.makeDirectory(newpath+'images')
+            if path.endswith('.png'):
+                data = themeZip.open(member).read()
+                folder.writeFile(newpath+'images/'+path_splited[-1], data)
+            elif path.endswith('.custom.css') or path.endswith('jquery-ui.css'):
+                data = themeZip.open(member).read()
+                folder.writeFile(newpath+'jquery-ui.css', data)
 
-        if multitheme:
-            return self.getThemesFromZip(themeArchive)
-
-        if version is None:
-            raise ValueError('Not a JQueryUI package')
-
-
-        folder.importZip(themeZip)
-        #register stylesheet and make it disabled
-        csstool = self.csstool()
-        stylesheet = csstool.getResourcesDict().get(stylesheetid, None)
-        if stylesheet is None:
-            csstool.registerStylesheet(stylesheetid)
-        
-        theme = self.getThemeById(themeid)
-
-        #clean up things
-        for i in ('index.html', 'development-bundle', 'js'):
-            try:
-                del folder[i]
-            except BadRequest, e:
-                raise TypeError('Not a JQueryUI package')
-
-        theme.unactivate()
-        return theme
+        return map(self.getThemeById, themeids)
 
     def deleteTheme(self, themeid):
         """Delete and unregister the theme"""
@@ -259,25 +236,11 @@ class SunburstTheme(object):
     """The theme provided by collective.js.jqueryui"""
     interface.implements(interfaces.IJQueryUITheme)
 
-    START_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-"
-
     def __init__(self, id, manager):
         if id != "sunburst":raise ValueError("Not Sunburst theme")
         self.id = "sunburst"
         self.manager = manager
-        self.stylesheetid = None
-        self.version = None
-        self.initialize()
-    
-    def initialize(self):
-        csstool = self.manager.csstool()
-        stylesheets = csstool.getResourcesDict()
-        for sid in stylesheets:
-            if sid.startswith(self.START_CSS_ID):
-                self.stylesheetid = sid
-                stylesheet = stylesheets[self.stylesheetid]
-                self.version = sid[len(self.START_CSS_ID):-len(".custom.css")]
-                break
+        self.stylesheetid = self.START_CSS_ID%config.VERSION
 
     def activate(self):
         csstool = self.manager.csstool()
@@ -301,38 +264,27 @@ class SunburstTheme(object):
 
 
 class PersistentTheme(object):
-    """A theme store in plone.Resource"""
+    """A theme store in plone.Resource
+    
+    The css must in portal_resources/jqueryuithemes/themeid/jqueryui.css
+    """
     interface.implements(interfaces.IJQueryUITheme)
+
+    CSS_ID = "portal_resources/jqueryuitheme/%s/jqueryui.css"
+
     def __init__(self, id, manager):
         self.id = id
-        self.version = None
         self.manager = manager
         self._site = None
-        self.stylesheetid = None
-        self.initialize()
-
-    def initialize(self):
-        csstool = self.manager.csstool()
-        stylesheets = csstool.getResourcesDict()
-        startid = 'portal_resources/jqueryuitheme/css/%s'%self.id
-        for sid in stylesheets:
-            if not sid.startswith(startid):continue
-            self.stylesheetid = sid
-            break
-
-        if self.stylesheetid is None:
-            logger.info('theme not existing in portal_resource')
-            return
-
-        start_index = len('portal_resources/jqueryuitheme/css/%s/jquery-ui-'%self.id)
-        end_index = len('.custom.css')
-        self.version = self.stylesheetid[start_index:-end_index]
-
+        self.stylesheetid = self.CSS_ID%id
 
     def activate(self):
         csstool = self.manager.csstool()
         try:
-            stylesheet = csstool.getResourcesDict()[self.stylesheetid]
+            stylesheet = csstool.getResourcesDict().get(self.stylesheetid, None)
+            if not stylesheet:
+                csstool.registerStylesheet(self.stylesheetid)
+                stylesheet = csstool.getResourcesDict()[self.stylesheetid]
             stylesheet.setApplyPrefix(True)
             stylesheet.setEnabled(True)
             csstool.cookResources()
@@ -342,9 +294,10 @@ class PersistentTheme(object):
     def unactivate(self):
         csstool = self.manager.csstool()
         try:
-            stylesheet = csstool.getResourcesDict()[self.stylesheetid]
-            stylesheet.setEnabled(False)
-            csstool.cookResources()
+            stylesheet = csstool.getResourcesDict().get(self.stylesheetid, None)
+            if stylesheet:
+                csstool.unregisterStylesheet(self.stylesheetid)
+                csstool.cookResources()
         except KeyError, e:
             logger.info('the old theme has not been found in resource directory')
 

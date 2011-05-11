@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-05-11 15:05+0000\n"
+"POT-Creation-Date: 2011-05-11 15:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: ./controlpanel_main.pt:32
+#: ./controlpanel_main.pt:33
 msgid "Create a theme"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: ./controlpanel_main.pt:36
+#: ./controlpanel_main.pt:37
 #: ./i18n.py:29
 msgid "Delete a theme"
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 msgid "Import JQueryUI Theme"
 msgstr ""
 
-#: ./controlpanel_main.pt:30
+#: ./controlpanel_main.pt:31
 msgid "Import a theme"
 msgstr ""
 
@@ -66,7 +66,7 @@ msgstr ""
 msgid "JQueryUI theme manager"
 msgstr ""
 
-#: ./controlpanel_main.pt:34
+#: ./controlpanel_main.pt:35
 msgid "Load default themes"
 msgstr ""
 
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Select a JQueryUI Theme"
 msgstr ""
 
-#: ./controlpanel_main.pt:26
+#: ./controlpanel_main.pt:27
 msgid "Select a theme"
 msgstr ""
 
@@ -86,7 +86,7 @@ msgstr ""
 msgid "The archive mut provide the structure provided by http://jqueryui.com/themeroller archive."
 msgstr ""
 
-#: ./controlpanel_main.pt:29
+#: ./controlpanel_main.pt:30
 msgid "The example page is not activated. You must edit in ZMI the property example_activated in portal_properties/jqueryui_properties to be able to use it."
 msgstr ""
 
@@ -301,7 +301,7 @@ msgstr ""
 
 #. Default: "Use this control panel to import a jqueryui theme."
 #: ./controlpanel_import.pt:23
-#: ./controlpanel_main.pt:23
+#: ./controlpanel_main.pt:24
 msgid "description_theme_settings"
 msgstr ""
 
@@ -362,22 +362,22 @@ msgid "heading_theme_settings"
 msgstr ""
 
 #. Default: "Create your theme with this form, no need to go on jqueryui website."
-#: ./controlpanel_main.pt:33
+#: ./controlpanel_main.pt:34
 msgid "help_controlpanel_create_theme"
 msgstr ""
 
 #. Default: "Here you can import a theme from a zip file built on <a href=\"http://www.jqueryui.com/themeroller\">jqueryui.com/themeroller</a>"
-#: ./controlpanel_main.pt:31
+#: ./controlpanel_main.pt:32
 msgid "help_controlpanel_import_theme"
 msgstr ""
 
 #. Default: "JQueryUI provide default themes. Just by clicking the link below you will get all default themes that fit with your version."
-#: ./controlpanel_main.pt:35
+#: ./controlpanel_main.pt:36
 msgid "help_controlpanel_load_themes"
 msgstr ""
 
 #. Default: "Themes are not selected when you create or import them. You must select a theme !"
-#: ./controlpanel_main.pt:27
+#: ./controlpanel_main.pt:28
 msgid "help_controlpanel_select_theme"
 msgstr ""
 
@@ -440,11 +440,6 @@ msgstr ""
 #: ./controlpanel_import.pt:16
 #: ./controlpanel_layout.pt:22
 msgid "label_up_to_jqueryuisettings"
-msgstr ""
-
-#. Default: "Up to Site Setup"
-#: ./controlpanel_main.pt:16
-msgid "label_up_to_plone_setup"
 msgstr ""
 
 #. Default: "Drop shadows: Left offset"
