@@ -12,6 +12,15 @@ desc_cdn = _(u"desc_cdn", default=u"Default is http://ajax.googleapis.com/ajax/l
 label_theme = _(u"label_theme", default=u"Theme")
 maincontrolpanel_label = _(u"JQuery UI theme settings")
 customcontrolpanel_label = _(u"JQuery UI custom theme settings")
+msg_customtheme_changes_saved = _(u"Your custom theme has been install. You can now select it.")
+msg_importtheme_changes_saved = _(u"Theme imported. You may want to select this theme.")
+err_importtheme_typeerror = _(u"You must upload a zip")
+err_importtheme_valueerror = _(u"You must upload a valid JQueryUI theme file")
+
+label_importtheme_form = _(u"Import JQueryUI Theme")
+
+label_theme_archive= _(u"Theme archive")
+desc_theme_archive= _(u"The archive mut provide the structure provided by http://jqueryui.com/themeroller archive.")
 
 themename           = _(u"themename", default=u"Theme name (ascii)")
 

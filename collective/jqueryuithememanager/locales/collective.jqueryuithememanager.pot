@@ -1,0 +1,379 @@
+# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+# SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2011-05-11 13:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: collective.jqueryuithememanager\n"
+
+#: ./i18n.py:20
+msgid "Import JQueryUI Theme"
+msgstr ""
+
+#: ./i18n.py:14
+msgid "JQuery UI custom theme settings"
+msgstr ""
+
+#: ./i18n.py:13
+msgid "JQuery UI theme settings"
+msgstr ""
+
+#: ./profiles/default/controlpanel.xml
+msgid "JQueryUI theme manager"
+msgstr ""
+
+#: ./i18n.py:23
+msgid "The archive mut provide the structure provided by http://jqueryui.com/themeroller archive."
+msgstr ""
+
+#: ./i18n.py:22
+msgid "Theme archive"
+msgstr ""
+
+#: ./i18n.py:16
+msgid "Theme imported. You may want to select this theme."
+msgstr ""
+
+#: ./i18n.py:18
+msgid "You must upload a valid JQueryUI theme file"
+msgstr ""
+
+#: ./i18n.py:17
+msgid "You must upload a zip"
+msgstr ""
+
+#: ./i18n.py:15
+msgid "Your custom theme has been install. You can now select it."
+msgstr ""
+
+#. Default: "Clickable active state: Background color"
+#: ./i18n.py:76
+msgid "bgColorActive"
+msgstr ""
+
+#. Default: "Content: Background color"
+#: ./i18n.py:39
+msgid "bgColorContent"
+msgstr ""
+
+#. Default: "Clickable default state: Background color"
+#: ./i18n.py:55
+msgid "bgColorDefault"
+msgstr ""
+
+#. Default: "Error: Background color"
+#: ./i18n.py:69
+msgid "bgColorError"
+msgstr ""
+
+#. Default: "Header: Background color"
+#: ./i18n.py:32
+msgid "bgColorHeader"
+msgstr ""
+
+#. Default: "Highlight: Background color"
+#: ./i18n.py:83
+msgid "bgColorHighlight"
+msgstr ""
+
+#. Default: "Clickable hover state: Background color"
+#: ./i18n.py:62
+msgid "bgColorHover"
+msgstr ""
+
+#. Default: "Modal screen for overlay: Background color"
+#: ./i18n.py:90
+msgid "bgColorOverlay"
+msgstr ""
+
+#. Default: "Drop shadows: Background color"
+#: ./i18n.py:46
+msgid "bgColorShadow"
+msgstr ""
+
+#. Default: "Clickable active state: Background opacity"
+#: ./i18n.py:77
+msgid "bgImgOpacityActive"
+msgstr ""
+
+#. Default: "Content: Background opacity"
+#: ./i18n.py:40
+msgid "bgImgOpacityContent"
+msgstr ""
+
+#. Default: "Clickable default state: Background opacity"
+#: ./i18n.py:56
+msgid "bgImgOpacityDefault"
+msgstr ""
+
+#. Default: "Error: Background opacity"
+#: ./i18n.py:70
+msgid "bgImgOpacityError"
+msgstr ""
+
+#. Default: "Header: Background opacity"
+#: ./i18n.py:33
+msgid "bgImgOpacityHeader"
+msgstr ""
+
+#. Default: "Highlight: Background opacity"
+#: ./i18n.py:84
+msgid "bgImgOpacityHighlight"
+msgstr ""
+
+#. Default: "Clickable hover state: Background opacity"
+#: ./i18n.py:63
+msgid "bgImgOpacityHover"
+msgstr ""
+
+#. Default: "Modal screen for overlay: Background opacity"
+#: ./i18n.py:91
+msgid "bgImgOpacityOverlay"
+msgstr ""
+
+#. Default: "Drop shadows: Background opacity"
+#: ./i18n.py:48
+msgid "bgImgOpacityShadow"
+msgstr ""
+
+#. Default: "Clickable active state: Background texture"
+#: ./i18n.py:78
+msgid "bgTextureActive"
+msgstr ""
+
+#. Default: "Content: Background texture"
+#: ./i18n.py:41
+msgid "bgTextureContent"
+msgstr ""
+
+#. Default: "Clickable default state: Background texture"
+#: ./i18n.py:57
+msgid "bgTextureDefault"
+msgstr ""
+
+#. Default: "Error: Background texture"
+#: ./i18n.py:71
+msgid "bgTextureError"
+msgstr ""
+
+#. Default: "Header: Background texture"
+#: ./i18n.py:34
+msgid "bgTextureHeader"
+msgstr ""
+
+#. Default: "Highlight: Background texture"
+#: ./i18n.py:85
+msgid "bgTextureHighlight"
+msgstr ""
+
+#. Default: "Clickable hover state: Background texture"
+#: ./i18n.py:64
+msgid "bgTextureHover"
+msgstr ""
+
+#. Default: "Modal screen for overlay: Background texture"
+#: ./i18n.py:92
+msgid "bgTextureOverlay"
+msgstr ""
+
+#. Default: "Drop shadows: Background Texture"
+#: ./i18n.py:47
+msgid "bgTextureShadow"
+msgstr ""
+
+#. Default: "Clickable active state: Border color"
+#: ./i18n.py:79
+msgid "borderColorActive"
+msgstr ""
+
+#. Default: "Content: Border color"
+#: ./i18n.py:42
+msgid "borderColorContent"
+msgstr ""
+
+#. Default: "Clickable default state: Border color"
+#: ./i18n.py:58
+msgid "borderColorDefault"
+msgstr ""
+
+#. Default: "Error: Border color"
+#: ./i18n.py:72
+msgid "borderColorError"
+msgstr ""
+
+#. Default: "Header: Border color"
+#: ./i18n.py:35
+msgid "borderColorHeader"
+msgstr ""
+
+#. Default: "Highlight: Border color"
+#: ./i18n.py:86
+msgid "borderColorHighlight"
+msgstr ""
+
+#. Default: "Clickable hover state: Border color"
+#: ./i18n.py:65
+msgid "borderColorHover"
+msgstr ""
+
+#. Default: "Corner Radius"
+#: ./i18n.py:30
+msgid "cornerRadius"
+msgstr ""
+
+#. Default: "Drop shadows: Corners"
+#: ./i18n.py:49
+msgid "cornerRadiusShadow"
+msgstr ""
+
+#. Default: "Default is http://ajax.googleapis.com/ajax/libs/jqueryui/%s/themes/%s/jquery-ui.css"
+#: ./i18n.py:10
+msgid "desc_cdn"
+msgstr ""
+
+#. Default: "Specify the version of jqueryui used"
+#: ./i18n.py:7
+msgid "desc_version"
+msgstr ""
+
+#. Default: "Clickable active state: Text color"
+#: ./i18n.py:81
+msgid "fcActive"
+msgstr ""
+
+#. Default: "Content: Text color"
+#: ./i18n.py:44
+msgid "fcContent"
+msgstr ""
+
+#. Default: "Clickable default state: Text color"
+#: ./i18n.py:60
+msgid "fcDefault"
+msgstr ""
+
+#. Default: "Error: Text color"
+#: ./i18n.py:74
+msgid "fcError"
+msgstr ""
+
+#. Default: "Header: Text color"
+#: ./i18n.py:37
+msgid "fcHeader"
+msgstr ""
+
+#. Default: "Highlight: Text color"
+#: ./i18n.py:88
+msgid "fcHighlight"
+msgstr ""
+
+#. Default: "Clickable hover state: Text color"
+#: ./i18n.py:67
+msgid "fcHover"
+msgstr ""
+
+#. Default: "Weight"
+#: ./i18n.py:28
+msgid "ffDefault"
+msgstr ""
+
+#. Default: "Size"
+#: ./i18n.py:29
+msgid "fsDefault"
+msgstr ""
+
+#. Default: "Familly"
+#: ./i18n.py:27
+msgid "fwDefault"
+msgstr ""
+
+#. Default: "Clickable active state: Icon color"
+#: ./i18n.py:80
+msgid "iconColorActive"
+msgstr ""
+
+#. Default: "Content: Icon color"
+#: ./i18n.py:43
+msgid "iconColorContent"
+msgstr ""
+
+#. Default: "Clickable default state: Icon color"
+#: ./i18n.py:59
+msgid "iconColorDefault"
+msgstr ""
+
+#. Default: "Error: Icon color"
+#: ./i18n.py:73
+msgid "iconColorError"
+msgstr ""
+
+#. Default: "Header: Icon color"
+#: ./i18n.py:36
+msgid "iconColorHeader"
+msgstr ""
+
+#. Default: "Highlight: Icon color"
+#: ./i18n.py:87
+msgid "iconColorHighlight"
+msgstr ""
+
+#. Default: "Clickable hover state: Icon color"
+#: ./i18n.py:66
+msgid "iconColorHover"
+msgstr ""
+
+#. Default: "CDN to use"
+#: ./i18n.py:9
+msgid "label_cdn"
+msgstr ""
+
+#. Default: "Theme"
+#: ./i18n.py:12
+msgid "label_theme"
+msgstr ""
+
+#. Default: "JQuery UI Version"
+#: ./i18n.py:6
+msgid "label_version"
+msgstr ""
+
+#. Default: "Drop shadows: Left offset"
+#: ./i18n.py:51
+msgid "offsetLeftShadow"
+msgstr ""
+
+#. Default: "Drop shadows: Top offset"
+#: ./i18n.py:52
+msgid "offsetTopShadow"
+msgstr ""
+
+#. Default: "Modal screen for overlay: Opacity"
+#: ./i18n.py:93
+msgid "opacityOverlay"
+msgstr ""
+
+#. Default: "Drop shadows: Shadow opacity"
+#: ./i18n.py:50
+msgid "opacityShadow"
+msgstr ""
+
+#. Default: "Theme name (ascii)"
+#: ./i18n.py:25
+msgid "themename"
+msgstr ""
+
+#. Default: "Drop shadows: Shadow tickness"
+#: ./i18n.py:53
+msgid "thicknessShadow"
+msgstr ""
+

@@ -98,9 +98,6 @@ every things goes well. So first we download a zip from google code
     >>> import cStringIO
     >>> jqueryui_content = urllib.urlopen(config.ZIP_JQUERYUI_URL).read()
     >>> jqueryui_zip = cStringIO.StringIO(jqueryui_content)
-    >>> DELETEME = open('test.zip','w')
-    >>> DELETEME.write(jqueryui_content)
-    >>> DELETEME.close()
 
 Next we go back to jqueryui controlpanel to select 'Import a theme'
 

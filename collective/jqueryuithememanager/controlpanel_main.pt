@@ -20,14 +20,18 @@
             Up to Site Setup
     </a>
 
-    <p i18n:translate="description_theme_settings">
+    <p i18n:translate="description_theme_settings" class="discreet">
         Use this control panel to manage jqueryui themes.
     </p>
-    <ul>
-        <li><a href="" tal:attributes="href string:${view/context/absolute_url}/@@jqueryui-import-theme">Import a theme</a></li>
-        <li><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-custom-controlpanel">Create a theme</a></li>
-        <li><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-select">Select a theme</a></li>
-    </ul>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-select">Select a theme</a></h2>
+    <p>Themes are not selected when you create or import them. You must select one theme !</p>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@jqueryui-import-theme">Import a theme</a></h2>
+    <p>Here you can import a theme from a zip file built on <a href="http://www.jqueryui.com/themeroller">jqueryui.com/themeroller</a></p>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-custom-controlpanel">Create a theme</a></h2>
+    <p>Create your theme with this form, no need to go on jqueryui website.</p>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-load-default-themes">Load default themes</a></h2>
+    <p>JQueryUI provide default themes. Just by clicking the link below you will get all default themes that fit with your version.</p>
+
 </div>
 
 </body>
