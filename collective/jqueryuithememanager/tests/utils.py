@@ -1,8 +1,6 @@
 JQUERYUI_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.12.custom.css"
-JQUERYUI_CSS_VERSION = "1.8.12"
 
 CUSTOM_CSS_ID = "portal_resources/jqueryuitheme/css/testtheme/jquery-ui-1.8.12.custom.css"
-CUSTOM_CSS_VERSION = "1.8.12"
 CUSTOM_THEME_NAME = "testtheme"
 
 class FakeManager:

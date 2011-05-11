@@ -16,9 +16,6 @@ class SunburstThemeTestCase(base.UnitTestCase):
     def test_stylesheetid(self):
         self.failUnless(self.theme.stylesheetid == utils.JQUERYUI_CSS_ID)
     
-    def test_version(self):
-        self.failUnless(self.theme.version == utils.JQUERYUI_CSS_VERSION)
-
     def test_activate(self):
         stylesheet = self.theme.manager.csstool().getResourcesDict()[utils.JQUERYUI_CSS_ID]
         self.failUnless(stylesheet.enabled) #must be enabled
@@ -43,9 +40,6 @@ class PersistentThemeTestCase(base.UnitTestCase):
 
     def test_stylesheetid(self):
         self.failUnless(self.theme.stylesheetid == utils.CUSTOM_CSS_ID)
-    
-    def test_version(self):
-        self.failUnless(self.theme.version == utils.CUSTOM_CSS_VERSION)
 
     def test_activate(self):
         stylesheet = self.theme.manager.csstool().getResourcesDict()[utils.CUSTOM_CSS_ID]
@@ -97,7 +91,7 @@ class ThemeManagerTestCase(base.UnitTestCase):
         self.failUnless(self.tm.getDefaultThemeId() == 'testtheme')
     
     def test_downloadTheme(self):
-        data= {'name': 'testtheme','version': '1.8.11',
+        data= {'name': 'testtheme',
                'fwDefault': 'normal', 'bgTextureHover': 'normal', 
                'cornerRadiusShadow': '5px', 'fcHover': '#444444',
                'bgTextureShadow': None, 'fcHighlight': '#dd8800',
