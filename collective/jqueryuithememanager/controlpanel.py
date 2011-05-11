@@ -27,17 +27,31 @@ from plone.autoform.form import AutoExtensibleForm
 from z3c.form import form, button
 from plone.namedfile.field import NamedFile
 from Products.statusmessages.interfaces import IStatusMessage
+from Products.CMFCore.utils import getToolByName
 
 
-class MainControlPanelForm(RegistryEditForm):
+class MainControlPanelView(BrowserView):
+    """Main control panel"""
+    
+    def isExampleJqueryUIEnabled(self):
+        pp = getToolByName(self.context, 'portal_properties')
+        try:
+            return pp.jqueryui_properties.example_activated
+        except AttributeError:
+            return False
+
+
+class SelectThemeControlPanelForm(RegistryEditForm):
+    """Select a theme control panel"""
     schema = interfaces.IJQueryUIThemeSettings
 
-MainControlPanelView = layout.wrap_form(MainControlPanelForm,
+SelectThemeControlPanelView = layout.wrap_form(SelectThemeControlPanelForm,
                                      ControlPanelFormWrapper)
-MainControlPanelView.label = i18n.maincontrolpanel_label
+SelectThemeControlPanelView.label = i18n.label_selectcontrolpanel
 
 
 class CustomControlPanelForm(RegistryEditForm):
+    """Create or modify a theme control panel"""
     schema = interfaces.IJQueryUITheme
     parent_view = "collective.jqueryuithememanager-controlpanel"
 
@@ -81,14 +95,13 @@ CustomControlPanelView.label = i18n.customcontrolpanel_label
 #        return True
 
 class IImportThemeForm(interface.Interface):
-    """Import Theme Form"""
+    """Import Theme Form schema"""
 
     themeArchive = schema.Bytes(title=i18n.label_theme_archive,
                                 description=i18n.desc_theme_archive)
 
 class ImportThemeForm(AutoExtensibleForm, form.Form):
-    """
-    """
+    """Import Theme Form control panel (from a zipfile)"""
     schema = IImportThemeForm
     ignoreContext = True
     control_panel_view = "plone_control_panel"
@@ -138,13 +151,60 @@ class LoadDefaultThemes(BrowserView):
         themeArchive = StringIO.StringIO(jqueryui_content)
         tm = theme.ThemeManager()
         tm.getThemesFromZip(themeArchive)
-        IStatusMessage(self.request).addStatusMessage(u"Default themes as been loaded.")
+        IStatusMessage(self.request).addStatusMessage(i18n.msg_defaulttheme_loaded)
         self.request.response.redirect("%s/%s" % (self.context.absolute_url(), self.parent_view))
 
+class DeleteThemeForm(AutoExtensibleForm, form.Form):
+    """Delete Theme Form control panel"""
+    schema = interfaces.IJQueryUIThemeSettings
+    ignoreContext = True
+    control_panel_view = "plone_control_panel"
+    parent_view = "@@collective.jqueryuithememanager-controlpanel"
+    schema_prefix = None
 
+    @button.buttonAndHandler(i18n.action_delete_theme)
+    def handleDeleteTheme(self, action):
+        data, errors = self.extractData()
+        abs_url=self.context.absolute_url()
+        url = abs_url+'/@@collective.jqueryuithememanager-delete-theme'
+        if data['theme'] == u'sunburst':
+            msg = i18n.err_deletetheme_sunburst
+            IStatusMessage(self.request).addStatusMessage(msg)
+            self.request.response.redirect(url)
+            return
+
+        tm = theme.ThemeManager()
+        themes = tm.deleteTheme(data['theme'])
+        msg = i18n.msg_deletetheme_changes_saved
+        IStatusMessage(self.request).addStatusMessage(msg)
+        self.request.response.redirect(url)
+
+    @button.buttonAndHandler(i18n.action_delete_allthemes)
+    def handleDeleteAllThemes(self, action):
+        tm = theme.ThemeManager()
+        themeids = tm.getThemeIds()
+        for themeid in themeids:
+            if themeid == 'sunburst':continue
+            tm.deleteTheme(themeid)
+
+        msg = i18n.msg_deletethemes_changes_saved
+        IStatusMessage(self.request).addStatusMessage(msg)
+        abs_url=self.context.absolute_url()
+        url="%s/%s" % (abs_url, self.parent_view)
+        self.request.response.redirect(url)
+
+
+class DeleteThemeFormWrapper(layout.FormWrapper):
+    """Use this form as the plone.z3cform layout wrapper to get the control
+    panel layout.
+    """
+    label = i18n.label_deletetheme_form
+    form = DeleteThemeForm
+    index = ViewPageTemplateFile('controlpanel_layout.pt')
 
 @component.adapter(interfaces.IJQueryUIThemeSettings, IRecordModifiedEvent)
 def handleRegistryModified(settings, event):
+    """Handle configuration change in the registry on theme config"""
     #FIRST: remove old resource
     oldtheme = None
     if event.record.fieldName == 'theme':

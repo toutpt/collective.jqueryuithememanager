@@ -27,13 +27,14 @@
   <browser:page
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     name="collective.jqueryuithememanager-controlpanel"
+    class=".controlpanel.MainControlPanelView"
     template="controlpanel_main.pt"
     permission="cmf.ManagePortal"
     />
   <browser:page
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     name="collective.jqueryuithememanager-select"
-    class=".controlpanel.MainControlPanelView"
+    class=".controlpanel.SelectThemeControlPanelView"
     permission="cmf.ManagePortal"
     />
   <browser:page
@@ -52,6 +53,12 @@
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     name="collective.jqueryuithememanager-load-default-themes"
     class=".controlpanel.LoadDefaultThemes"
+    permission="cmf.ManagePortal"
+    />
+  <browser:page
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    name="collective.jqueryuithememanager-delete-theme"
+    class=".controlpanel.DeleteThemeFormWrapper"
     permission="cmf.ManagePortal"
     />
 

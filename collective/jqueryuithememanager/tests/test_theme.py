@@ -130,7 +130,7 @@ class ThemeManagerTestCase(base.UnitTestCase):
                'borderColorDefault': '#cccccc', 'bgImgOpacityActive': '50',
                'offsetTopShadow': '5px'}
         self.tm.downloadTheme(data)
-        pass #already tested by the integration tests
+        self.tm
 
     def test_getThemesFromZip(self):
         pass

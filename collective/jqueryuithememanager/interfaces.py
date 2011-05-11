@@ -72,8 +72,6 @@ class IJQueryUITheme(interface.Interface):
     
     name = schema.ASCIILine(title=i18n.themename)
     
-    version = schema.ASCIILine(title=i18n.label_version)
-    
     #Fonts
     fwDefault = schema.ASCIILine(title=i18n.fwDefault,
                                  default='normal')

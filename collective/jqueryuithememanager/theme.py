@@ -121,10 +121,9 @@ class ThemeManager(object):
     
         query+= '&t-name='+data['name']
         query+= '&scope='
-        query+='&ui-version='+data['version']
+        query+='&ui-version='+config.VERSION
         datac = data.copy()
         del datac['name']
-        del datac['version']
         for key in datac:
             if 'Texture' in key: datac[key] = '01_flat.png' #force to use flat
         theme = urlencode(datac).replace('%23','') # %23 is # and we don't want this in color code
@@ -152,6 +151,7 @@ class ThemeManager(object):
         themeZip = checkZipFile(themeArchive)
         folder = self.getThemeDirectory()
         cssids = []
+        isThemesFolder = False
         for name in themeZip.namelist():
             member = themeZip.getinfo(name)
             path = member.filename.lstrip('/')
@@ -242,6 +242,18 @@ class ThemeManager(object):
 
         theme.unactivate()
         return theme
+
+    def deleteTheme(self, themeid):
+        """Delete and unregister the theme"""
+        theme = self.getThemeById(themeid)
+        folder = self.getThemeDirectory()
+        css = folder['css']
+        del css[themeid]
+
+        csstool = self.csstool()
+        csstool.unregisterResource(theme.stylesheetid) #resource already re cooked
+
+
 
 class SunburstTheme(object):
     """The theme provided by collective.js.jqueryui"""

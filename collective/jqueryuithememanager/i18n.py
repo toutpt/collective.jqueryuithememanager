@@ -3,24 +3,31 @@ from zope.i18nmessageid import MessageFactory
 messageFactory = MessageFactory("collective.jqueryuithememanager")
 _ = messageFactory
 
-label_version = _(u"label_version", default=u"JQuery UI Version")
-desc_version = _(u"desc_version", default=u"Specify the version of jqueryui used")
-
 label_cdn = _(u"label_cdn", default=u"CDN to use")
 desc_cdn = _(u"desc_cdn", default=u"Default is http://ajax.googleapis.com/ajax/libs/jqueryui/%s/themes/%s/jquery-ui.css")
 
 label_theme = _(u"label_theme", default=u"Theme")
-maincontrolpanel_label = _(u"JQuery UI theme settings")
+label_selectcontrolpanel = _(u"Select a JQueryUI Theme")
 customcontrolpanel_label = _(u"JQuery UI custom theme settings")
 msg_customtheme_changes_saved = _(u"Your custom theme has been install. You can now select it.")
 msg_importtheme_changes_saved = _(u"Theme imported. You may want to select this theme.")
 err_importtheme_typeerror = _(u"You must upload a zip")
 err_importtheme_valueerror = _(u"You must upload a valid JQueryUI theme file")
 
+msg_defaulttheme_loaded = _(u"Default themes as been loaded.")
+
+action_delete_theme = _(u"Delete")
+action_delete_allthemes = _(u"Delete all themes")
+
 label_importtheme_form = _(u"Import JQueryUI Theme")
 
 label_theme_archive= _(u"Theme archive")
 desc_theme_archive= _(u"The archive mut provide the structure provided by http://jqueryui.com/themeroller archive.")
+
+msg_deletetheme_changes_saved = _(u"The theme has been deleted")
+msg_deletethemes_changes_saved = _(u"All persistent themes has been deleted")
+label_deletetheme_form = _(u"Delete a theme")
+err_deletetheme_sunburst = _(u"Sunburst can not be deleted. It is the default theme")
 
 themename           = _(u"themename", default=u"Theme name (ascii)")
 

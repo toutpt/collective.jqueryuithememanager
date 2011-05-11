@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-05-11 13:04+0000\n"
+"POT-Creation-Date: 2011-05-11 15:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,363 +17,463 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: collective.jqueryuithememanager\n"
 
+#: ./i18n.py:28
+msgid "All persistent themes has been deleted"
+msgstr ""
+
+#: ./controlpanel_import.pt:65
+msgid "Cancel"
+msgstr ""
+
+#: ./controlpanel_main.pt:32
+msgid "Create a theme"
+msgstr ""
+
+#: ./i18n.py:17
+msgid "Default themes as been loaded."
+msgstr ""
+
+#: ./i18n.py:19
+msgid "Delete"
+msgstr ""
+
+#: ./controlpanel_main.pt:36
+#: ./i18n.py:29
+msgid "Delete a theme"
+msgstr ""
+
 #: ./i18n.py:20
+msgid "Delete all themes"
+msgstr ""
+
+#: ./controlpanel_import.pt:58
+msgid "Import"
+msgstr ""
+
+#: ./i18n.py:22
 msgid "Import JQueryUI Theme"
 msgstr ""
 
-#: ./i18n.py:14
-msgid "JQuery UI custom theme settings"
+#: ./controlpanel_main.pt:30
+msgid "Import a theme"
 msgstr ""
 
-#: ./i18n.py:13
-msgid "JQuery UI theme settings"
+#: ./i18n.py:11
+msgid "JQuery UI custom theme settings"
 msgstr ""
 
 #: ./profiles/default/controlpanel.xml
 msgid "JQueryUI theme manager"
 msgstr ""
 
-#: ./i18n.py:23
+#: ./controlpanel_main.pt:34
+msgid "Load default themes"
+msgstr ""
+
+#: ./i18n.py:10
+msgid "Select a JQueryUI Theme"
+msgstr ""
+
+#: ./controlpanel_main.pt:26
+msgid "Select a theme"
+msgstr ""
+
+#: ./i18n.py:30
+msgid "Sunburst can not be deleted. It is the default theme"
+msgstr ""
+
+#: ./i18n.py:25
 msgid "The archive mut provide the structure provided by http://jqueryui.com/themeroller archive."
 msgstr ""
 
-#: ./i18n.py:22
+#: ./controlpanel_main.pt:29
+msgid "The example page is not activated. You must edit in ZMI the property example_activated in portal_properties/jqueryui_properties to be able to use it."
+msgstr ""
+
+#: ./i18n.py:27
+msgid "The theme has been deleted"
+msgstr ""
+
+#: ./i18n.py:24
 msgid "Theme archive"
 msgstr ""
 
-#: ./i18n.py:16
+#: ./i18n.py:13
 msgid "Theme imported. You may want to select this theme."
 msgstr ""
 
-#: ./i18n.py:18
+#: ./i18n.py:15
 msgid "You must upload a valid JQueryUI theme file"
 msgstr ""
 
-#: ./i18n.py:17
+#: ./i18n.py:14
 msgid "You must upload a zip"
 msgstr ""
 
-#: ./i18n.py:15
+#: ./i18n.py:12
 msgid "Your custom theme has been install. You can now select it."
 msgstr ""
 
 #. Default: "Clickable active state: Background color"
-#: ./i18n.py:76
+#: ./i18n.py:83
 msgid "bgColorActive"
 msgstr ""
 
 #. Default: "Content: Background color"
-#: ./i18n.py:39
+#: ./i18n.py:46
 msgid "bgColorContent"
 msgstr ""
 
 #. Default: "Clickable default state: Background color"
-#: ./i18n.py:55
+#: ./i18n.py:62
 msgid "bgColorDefault"
 msgstr ""
 
 #. Default: "Error: Background color"
-#: ./i18n.py:69
+#: ./i18n.py:76
 msgid "bgColorError"
 msgstr ""
 
 #. Default: "Header: Background color"
-#: ./i18n.py:32
+#: ./i18n.py:39
 msgid "bgColorHeader"
 msgstr ""
 
 #. Default: "Highlight: Background color"
-#: ./i18n.py:83
+#: ./i18n.py:90
 msgid "bgColorHighlight"
 msgstr ""
 
 #. Default: "Clickable hover state: Background color"
-#: ./i18n.py:62
+#: ./i18n.py:69
 msgid "bgColorHover"
 msgstr ""
 
 #. Default: "Modal screen for overlay: Background color"
-#: ./i18n.py:90
+#: ./i18n.py:97
 msgid "bgColorOverlay"
 msgstr ""
 
 #. Default: "Drop shadows: Background color"
-#: ./i18n.py:46
+#: ./i18n.py:53
 msgid "bgColorShadow"
 msgstr ""
 
 #. Default: "Clickable active state: Background opacity"
-#: ./i18n.py:77
+#: ./i18n.py:84
 msgid "bgImgOpacityActive"
 msgstr ""
 
 #. Default: "Content: Background opacity"
-#: ./i18n.py:40
+#: ./i18n.py:47
 msgid "bgImgOpacityContent"
 msgstr ""
 
 #. Default: "Clickable default state: Background opacity"
-#: ./i18n.py:56
+#: ./i18n.py:63
 msgid "bgImgOpacityDefault"
 msgstr ""
 
 #. Default: "Error: Background opacity"
-#: ./i18n.py:70
+#: ./i18n.py:77
 msgid "bgImgOpacityError"
 msgstr ""
 
 #. Default: "Header: Background opacity"
-#: ./i18n.py:33
+#: ./i18n.py:40
 msgid "bgImgOpacityHeader"
 msgstr ""
 
 #. Default: "Highlight: Background opacity"
-#: ./i18n.py:84
+#: ./i18n.py:91
 msgid "bgImgOpacityHighlight"
 msgstr ""
 
 #. Default: "Clickable hover state: Background opacity"
-#: ./i18n.py:63
+#: ./i18n.py:70
 msgid "bgImgOpacityHover"
 msgstr ""
 
 #. Default: "Modal screen for overlay: Background opacity"
-#: ./i18n.py:91
+#: ./i18n.py:98
 msgid "bgImgOpacityOverlay"
 msgstr ""
 
 #. Default: "Drop shadows: Background opacity"
-#: ./i18n.py:48
+#: ./i18n.py:55
 msgid "bgImgOpacityShadow"
 msgstr ""
 
 #. Default: "Clickable active state: Background texture"
-#: ./i18n.py:78
+#: ./i18n.py:85
 msgid "bgTextureActive"
 msgstr ""
 
 #. Default: "Content: Background texture"
-#: ./i18n.py:41
+#: ./i18n.py:48
 msgid "bgTextureContent"
 msgstr ""
 
 #. Default: "Clickable default state: Background texture"
-#: ./i18n.py:57
+#: ./i18n.py:64
 msgid "bgTextureDefault"
 msgstr ""
 
 #. Default: "Error: Background texture"
-#: ./i18n.py:71
+#: ./i18n.py:78
 msgid "bgTextureError"
 msgstr ""
 
 #. Default: "Header: Background texture"
-#: ./i18n.py:34
+#: ./i18n.py:41
 msgid "bgTextureHeader"
 msgstr ""
 
 #. Default: "Highlight: Background texture"
-#: ./i18n.py:85
+#: ./i18n.py:92
 msgid "bgTextureHighlight"
 msgstr ""
 
 #. Default: "Clickable hover state: Background texture"
-#: ./i18n.py:64
+#: ./i18n.py:71
 msgid "bgTextureHover"
 msgstr ""
 
 #. Default: "Modal screen for overlay: Background texture"
-#: ./i18n.py:92
+#: ./i18n.py:99
 msgid "bgTextureOverlay"
 msgstr ""
 
 #. Default: "Drop shadows: Background Texture"
-#: ./i18n.py:47
+#: ./i18n.py:54
 msgid "bgTextureShadow"
 msgstr ""
 
 #. Default: "Clickable active state: Border color"
-#: ./i18n.py:79
+#: ./i18n.py:86
 msgid "borderColorActive"
 msgstr ""
 
 #. Default: "Content: Border color"
-#: ./i18n.py:42
+#: ./i18n.py:49
 msgid "borderColorContent"
 msgstr ""
 
 #. Default: "Clickable default state: Border color"
-#: ./i18n.py:58
+#: ./i18n.py:65
 msgid "borderColorDefault"
 msgstr ""
 
 #. Default: "Error: Border color"
-#: ./i18n.py:72
+#: ./i18n.py:79
 msgid "borderColorError"
 msgstr ""
 
 #. Default: "Header: Border color"
-#: ./i18n.py:35
+#: ./i18n.py:42
 msgid "borderColorHeader"
 msgstr ""
 
 #. Default: "Highlight: Border color"
-#: ./i18n.py:86
+#: ./i18n.py:93
 msgid "borderColorHighlight"
 msgstr ""
 
 #. Default: "Clickable hover state: Border color"
-#: ./i18n.py:65
+#: ./i18n.py:72
 msgid "borderColorHover"
 msgstr ""
 
 #. Default: "Corner Radius"
-#: ./i18n.py:30
+#: ./i18n.py:37
 msgid "cornerRadius"
 msgstr ""
 
 #. Default: "Drop shadows: Corners"
-#: ./i18n.py:49
+#: ./i18n.py:56
 msgid "cornerRadiusShadow"
 msgstr ""
 
 #. Default: "Default is http://ajax.googleapis.com/ajax/libs/jqueryui/%s/themes/%s/jquery-ui.css"
-#: ./i18n.py:10
+#: ./i18n.py:7
 msgid "desc_cdn"
 msgstr ""
 
-#. Default: "Specify the version of jqueryui used"
-#: ./i18n.py:7
-msgid "desc_version"
+#. Default: "Use this control panel to import a jqueryui theme."
+#: ./controlpanel_import.pt:23
+#: ./controlpanel_main.pt:23
+msgid "description_theme_settings"
 msgstr ""
 
 #. Default: "Clickable active state: Text color"
-#: ./i18n.py:81
+#: ./i18n.py:88
 msgid "fcActive"
 msgstr ""
 
 #. Default: "Content: Text color"
-#: ./i18n.py:44
+#: ./i18n.py:51
 msgid "fcContent"
 msgstr ""
 
 #. Default: "Clickable default state: Text color"
-#: ./i18n.py:60
+#: ./i18n.py:67
 msgid "fcDefault"
 msgstr ""
 
 #. Default: "Error: Text color"
-#: ./i18n.py:74
+#: ./i18n.py:81
 msgid "fcError"
 msgstr ""
 
 #. Default: "Header: Text color"
-#: ./i18n.py:37
+#: ./i18n.py:44
 msgid "fcHeader"
 msgstr ""
 
 #. Default: "Highlight: Text color"
-#: ./i18n.py:88
+#: ./i18n.py:95
 msgid "fcHighlight"
 msgstr ""
 
 #. Default: "Clickable hover state: Text color"
-#: ./i18n.py:67
+#: ./i18n.py:74
 msgid "fcHover"
 msgstr ""
 
 #. Default: "Weight"
-#: ./i18n.py:28
+#: ./i18n.py:35
 msgid "ffDefault"
 msgstr ""
 
 #. Default: "Size"
-#: ./i18n.py:29
+#: ./i18n.py:36
 msgid "fsDefault"
 msgstr ""
 
 #. Default: "Familly"
-#: ./i18n.py:27
+#: ./i18n.py:34
 msgid "fwDefault"
 msgstr ""
 
+#. Default: "Theme settings"
+#: ./controlpanel_import.pt:13
+#: ./controlpanel_main.pt:13
+msgid "heading_theme_settings"
+msgstr ""
+
+#. Default: "Create your theme with this form, no need to go on jqueryui website."
+#: ./controlpanel_main.pt:33
+msgid "help_controlpanel_create_theme"
+msgstr ""
+
+#. Default: "Here you can import a theme from a zip file built on <a href=\"http://www.jqueryui.com/themeroller\">jqueryui.com/themeroller</a>"
+#: ./controlpanel_main.pt:31
+msgid "help_controlpanel_import_theme"
+msgstr ""
+
+#. Default: "JQueryUI provide default themes. Just by clicking the link below you will get all default themes that fit with your version."
+#: ./controlpanel_main.pt:35
+msgid "help_controlpanel_load_themes"
+msgstr ""
+
+#. Default: "Themes are not selected when you create or import them. You must select a theme !"
+#: ./controlpanel_main.pt:27
+msgid "help_controlpanel_select_theme"
+msgstr ""
+
+#. Default: "You can build a theme on http://jqueryui.com/themeroller/"
+#: ./controlpanel_import.pt:42
+msgid "help_theme_archive"
+msgstr ""
+
 #. Default: "Clickable active state: Icon color"
-#: ./i18n.py:80
+#: ./i18n.py:87
 msgid "iconColorActive"
 msgstr ""
 
 #. Default: "Content: Icon color"
-#: ./i18n.py:43
+#: ./i18n.py:50
 msgid "iconColorContent"
 msgstr ""
 
 #. Default: "Clickable default state: Icon color"
-#: ./i18n.py:59
+#: ./i18n.py:66
 msgid "iconColorDefault"
 msgstr ""
 
 #. Default: "Error: Icon color"
-#: ./i18n.py:73
+#: ./i18n.py:80
 msgid "iconColorError"
 msgstr ""
 
 #. Default: "Header: Icon color"
-#: ./i18n.py:36
+#: ./i18n.py:43
 msgid "iconColorHeader"
 msgstr ""
 
 #. Default: "Highlight: Icon color"
-#: ./i18n.py:87
+#: ./i18n.py:94
 msgid "iconColorHighlight"
 msgstr ""
 
 #. Default: "Clickable hover state: Icon color"
-#: ./i18n.py:66
+#: ./i18n.py:73
 msgid "iconColorHover"
 msgstr ""
 
 #. Default: "CDN to use"
-#: ./i18n.py:9
+#: ./i18n.py:6
 msgid "label_cdn"
 msgstr ""
 
 #. Default: "Theme"
-#: ./i18n.py:12
+#: ./i18n.py:9
 msgid "label_theme"
 msgstr ""
 
-#. Default: "JQuery UI Version"
-#: ./i18n.py:6
-msgid "label_version"
+#. Default: "Theme zip file"
+#: ./controlpanel_import.pt:40
+msgid "label_theme_zip"
+msgstr ""
+
+#. Default: "Up to JQueryUI Settings"
+#: ./controlpanel_import.pt:16
+#: ./controlpanel_layout.pt:22
+msgid "label_up_to_jqueryuisettings"
+msgstr ""
+
+#. Default: "Up to Site Setup"
+#: ./controlpanel_main.pt:16
+msgid "label_up_to_plone_setup"
 msgstr ""
 
 #. Default: "Drop shadows: Left offset"
-#: ./i18n.py:51
+#: ./i18n.py:58
 msgid "offsetLeftShadow"
 msgstr ""
 
 #. Default: "Drop shadows: Top offset"
-#: ./i18n.py:52
+#: ./i18n.py:59
 msgid "offsetTopShadow"
 msgstr ""
 
 #. Default: "Modal screen for overlay: Opacity"
-#: ./i18n.py:93
+#: ./i18n.py:100
 msgid "opacityOverlay"
 msgstr ""
 
 #. Default: "Drop shadows: Shadow opacity"
-#: ./i18n.py:50
+#: ./i18n.py:57
 msgid "opacityShadow"
 msgstr ""
 
 #. Default: "Theme name (ascii)"
-#: ./i18n.py:25
+#: ./i18n.py:32
 msgid "themename"
 msgstr ""
 
 #. Default: "Drop shadows: Shadow tickness"
-#: ./i18n.py:53
+#: ./i18n.py:60
 msgid "thicknessShadow"
 msgstr ""
 

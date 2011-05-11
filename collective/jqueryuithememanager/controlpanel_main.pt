@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       lang="en"
       metal:use-macro="context/prefs_main_template/macros/master"
-      i18n:domain="plonetheme.jqueryui">
+      i18n:domain="collective.jqueryuithememanager">
 
 <body>
 
@@ -23,14 +23,18 @@
     <p i18n:translate="description_theme_settings" class="discreet">
         Use this control panel to manage jqueryui themes.
     </p>
-    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-select">Select a theme</a></h2>
-    <p>Themes are not selected when you create or import them. You must select one theme !</p>
-    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@jqueryui-import-theme">Import a theme</a></h2>
-    <p>Here you can import a theme from a zip file built on <a href="http://www.jqueryui.com/themeroller">jqueryui.com/themeroller</a></p>
-    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-custom-controlpanel">Create a theme</a></h2>
-    <p>Create your theme with this form, no need to go on jqueryui website.</p>
-    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-load-default-themes">Load default themes</a></h2>
-    <p>JQueryUI provide default themes. Just by clicking the link below you will get all default themes that fit with your version.</p>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-select" i18n:translate="">Select a theme</a></h2>
+    <p i18n:translate="help_controlpanel_select_theme">Themes are not selected when you create or import them. You must select a theme !</p>
+    <p tal:condition="view/isExampleJqueryUIEnabled"><a tal:attributes="href string:${view/context/absolute_url}/@@example.jqueryui">@@example.jqueryui page</a></p>
+    <p tal:condition="not:view/isExampleJqueryUIEnabled" i18n:translate="">The example page is not activated. You must edit in ZMI the property example_activated in portal_properties/jqueryui_properties to be able to use it.</p>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@jqueryui-import-theme" i18n:translate="">Import a theme</a></h2>
+    <p i18n:translate="help_controlpanel_import_theme">Here you can import a theme from a zip file built on <a href="http://www.jqueryui.com/themeroller">jqueryui.com/themeroller</a></p>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-custom-controlpanel" i18n:translate="">Create a theme</a></h2>
+    <p i18n:translate="help_controlpanel_create_theme">Create your theme with this form, no need to go on jqueryui website.</p>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-load-default-themes" i18n:translate="">Load default themes</a></h2>
+    <p i18n:translate="help_controlpanel_load_themes">JQueryUI provide default themes. Just by clicking the link below you will get all default themes that fit with your version.</p>
+    <h2><a href="" tal:attributes="href string:${view/context/absolute_url}/@@collective.jqueryuithememanager-delete-theme" i18n:translate="">Delete a theme</a></h2>
+    <p i18n:translate="help_controlpanel_load_themes">Too much theme ? This form will let you delete a theme one by one.</p>
 
 </div>
 
