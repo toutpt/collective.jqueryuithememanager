@@ -4,7 +4,6 @@ except ImportError:
     SUNBURST_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.12.custom.css"
     VERSION = '1.8.12'
 
-
 PRELOADEDS = ('base', 'black-tie', 'blitzer', 'cupertino', 'dark-hive',
               'dot-luv','eggplant','excite-bike','flick','hot-sneaks',
               'humanity','le-frog','mint-choc','overcast', 'pepper-grinder',
