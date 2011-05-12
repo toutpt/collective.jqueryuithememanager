@@ -10,15 +10,22 @@
 
 <div metal:fill-slot="prefs_configlet_main">
 
+    <a href=""
+       id="setup-link"
+       tal:attributes="href string:$portal_url/plone_control_panel"
+       i18n:translate="" i18n:domain="plone">
+        Site Setup
+    </a> &rsaquo;
+
     <h1 class="documentFirstHeading"
         i18n:translate="heading_themes_need_an_update">Themes which need an update</h1>
 
     <a href=""
         class="link-parent"
-        tal:attributes="href string:${portal_url}/plone_control_panel"
-        i18n:domain="plone"
-        i18n:translate="label_up_to_plone_setup">
-            Up to Site Setup
+        tal:attributes="href string:${portal_url}/collective.jqueryuithememanager-controlpanel"
+        i18n:domain="collective.jqueryuithememanager"
+        i18n:translate="label_up_to_jqueryuisettings">
+            Up to JQueryUI Settings
     </a>
 
     <p i18n:translate="description_theme_settings" class="discreet">

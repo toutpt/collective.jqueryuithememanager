@@ -46,9 +46,10 @@ class SelectThemeControlPanelForm(RegistryEditForm):
     schema = interfaces.IDefaultThemeFormSchema
     control_panel_view = "collective.jqueryuithememanager-controlpanel"
 
-SelectThemeControlPanelView = layout.wrap_form(SelectThemeControlPanelForm,
-                                     ControlPanelFormWrapper)
-SelectThemeControlPanelView.label = i18n.label_selectcontrolpanel
+class SelectThemeControlPanelView(layout.FormWrapper):
+    label = i18n.label_selectcontrolpanel
+    form = SelectThemeControlPanelForm
+    index = ViewPageTemplateFile('controlpanel_layout.pt')
 
 
 class CustomControlPanelForm(RegistryEditForm):
@@ -63,9 +64,10 @@ class CustomControlPanelForm(RegistryEditForm):
         IStatusMessage(self.request).addStatusMessage(i18n.msg_customtheme_changes_saved)
 
 
-CustomControlPanelView = layout.wrap_form(CustomControlPanelForm,
-                                     ControlPanelFormWrapper)
-CustomControlPanelView.label = i18n.customcontrolpanel_label
+class CustomControlPanelView(layout.FormWrapper):
+    label = i18n.customcontrolpanel_label
+    form = CustomControlPanelForm
+    index = ViewPageTemplateFile('controlpanel_layout.pt')
 
 
 class IImportThemeForm(interface.Interface):
