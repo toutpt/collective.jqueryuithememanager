@@ -67,7 +67,7 @@ So now lets used that theme and control the import has not activated it
     >>> browser.getLink('JQueryUI theme manager').click()
     >>> browser.getLink('Select a theme').click()
     >>> browser.getControl('Theme').displayOptions
-    ['sunburst', 'mytheme']
+    ['sunburst', 'base', 'mytheme']
     >>> browser.getControl('Theme').getControl('mytheme').selected = True
     >>> browser.getControl('Save').click()
     >>> 'Changes saved' in browser.contents
@@ -99,7 +99,7 @@ every things goes well. So first we download a zip from google code
 Next we go back to jqueryui controlpanel to select 'Import a theme'
 
     >>> browser.getLink('JQueryUI theme manager').click()
-    >>> browser.getLink('Import a theme').click()
+    >>> browser.getLink('Import themes').click()
     >>> ctrl = browser.getControl('Theme archive')
     >>> ctrl.value is None
     True

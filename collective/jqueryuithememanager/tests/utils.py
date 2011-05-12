@@ -2,9 +2,12 @@
 class FakeManager:
     def __init__(self):
         self._tool = FakeCSSTool()
-    
+        self._directory = FakeResourceDirectory()
     def csstool(self):
         return self._tool
+
+    def getThemeDirectory(self):
+        return self._directory
     
 class FakeCSSTool:
     def __init__(self):
@@ -19,6 +22,9 @@ class FakeCSSTool:
 
     def cookResources(self):
         pass
+
+    def unregisterResource(self, id):
+        del self.resources[id]
 
 class FakeStyleSheet:
     def __init__(self):
@@ -44,15 +50,15 @@ class FakeResourceDirectory:
     def __init__(self):
         self.themes = []
     
-    def importZip(self, themeZip):
-        for name in themeZip.namelist():
-            member = themeZip.getinfo(name)
-            path = member.filename.lstrip('/')
-            starter = path.split('/')[0]
-            if starter =='css' and path.endswith('.custom.css'):
-                themeid = path.split('/')[1]
-                break
-        self.themes.append(themeid)
+#    def importZip(self, themeZip):
+#        for name in themeZip.namelist():
+#            member = themeZip.getinfo(name)
+#            path = member.filename.lstrip('/')
+#            starter = path.split('/')[0]
+#            if starter =='css' and path.endswith('.custom.css'):
+#                themeid = path.split('/')[1]
+#                break
+#        self.themes.append(themeid)
 
     def makeDirectory(self, path):
         pass

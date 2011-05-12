@@ -138,6 +138,8 @@ class ThemeManager(object):
         for provider in providers:
             if id in provider.getThemeIds():
                 return provider.getThemeById(id)
+        
+        return PersistentTheme(id, self)
 
 
     def getThemesProviders(self):
