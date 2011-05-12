@@ -1,7 +1,3 @@
-JQUERYUI_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.12.custom.css"
-
-CUSTOM_CSS_ID = "portal_resources/jqueryuitheme/css/testtheme/jquery-ui-1.8.12.custom.css"
-CUSTOM_THEME_NAME = "testtheme"
 
 class FakeManager:
     def __init__(self):
@@ -13,7 +9,6 @@ class FakeManager:
 class FakeCSSTool:
     def __init__(self):
         self.resources = {}
-        self.registerStylesheet(JQUERYUI_CSS_ID)
 
     def getResourcesDict(self):
         return self.resources

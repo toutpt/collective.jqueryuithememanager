@@ -20,10 +20,6 @@ class IJQueryUIThemeManagerLayer(interface.Interface):
 class IJQueryUIThemeSettings(interface.Interface):
     """JQueryUIThem settings"""
 
-#    theme = schema.ASCIILine(title=i18n.label_theme,
-#                             default='sunburst',
-#                             required=True)
-
     theme = schema.Choice(title=i18n.label_theme,
                           required=True,
                           default='sunburst',
@@ -34,20 +30,30 @@ class IJQueryUITheme(interface.Interface):
     
     stylesheetid = schema.ASCIILine(title=u"Stylesheet ID")
     
+    version = schema.ASCIILine(title=i18n.label_theme_version)
+    
     def activate():
         """set enabled to True to the stylesheet in css registry"""
     
     def unactivate():
         """set enabled to False to the stylesheet in css registry"""
 
-class IJQueryUIThemeManager(interface.Interface):
-    """A IJQueryUITheme manager"""
+class IThemesProvider(interface.Interface):
+    """You can create a themes provider"""
     
     def getThemesIds():
         """Return a list of all theme ids"""
 
     def getThemeById(id):
-        """Return a IJQueryUITheme. If id doesn't exists, it creates a new one"""
+        """Return the theme provided by id"""
+
+    def getThemes():
+        """Return a list of ITheme objects"""
+
+
+class IJQueryUIThemeManager(IThemesProvider):
+    """A IJQueryUITheme manager"""
+
 
     def getDefaultThemeId():
         """Return the default theme id"""
@@ -216,3 +222,13 @@ for i in config.THEME_SETTINGS:
     COLOR_WIDGETS[i] = 'collective.z3cform.colorpicker.colorpicker.ColorpickerFieldWidget'
 
 IJQueryUITheme.setTaggedValue(WIDGETS_KEY, COLOR_WIDGETS)
+
+
+class IDeleteThemeFormSchema(interface.Interface):
+    """Delete theme form"""
+    themes = schema.List(title=i18n.label_themes,
+                required=True,
+                value_type=schema.Choice(title=i18n.label_theme,
+                         vocabulary='collective.jqueryuithememanager.vocabularies.persistentthemes')
+                         )
+

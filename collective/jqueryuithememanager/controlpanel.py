@@ -22,9 +22,9 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.decode import processInputs
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from zExceptions import NotFound
+from zExceptions import NotFound, BadRequest
 from plone.autoform.form import AutoExtensibleForm
-from z3c.form import form, button
+from z3c.form import form, button, browser
 from plone.namedfile.field import NamedFile
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.CMFCore.utils import getToolByName
@@ -67,31 +67,6 @@ CustomControlPanelView = layout.wrap_form(CustomControlPanelForm,
                                      ControlPanelFormWrapper)
 CustomControlPanelView.label = i18n.customcontrolpanel_label
 
-
-#class ImportThemeForm(BrowserView):
-#
-#    def __call__(self):
-#        if self.update():
-#            return self.index()
-#        return ''
-#
-#    def authorize(self):
-#        authenticator = component.getMultiAdapter((self.context, self.request), name=u"authenticator")
-#        if not authenticator.verify():
-#            raise Unauthorized
-#    
-#    def update(self):
-#        self.errors = {}
-#        processInputs(self.request)
-#        form = self.request.form
-#
-#        if 'form.button.Import' in form:
-#            self.authorize()
-#            submitted = True
-#            themeArchive = form.get('themeArchive', None)
-#            theme.importTheme(themeArchive)
-#
-#        return True
 
 class IImportThemeForm(interface.Interface):
     """Import Theme Form schema"""
@@ -153,9 +128,11 @@ class LoadDefaultThemes(BrowserView):
         IStatusMessage(self.request).addStatusMessage(i18n.msg_defaulttheme_loaded)
         self.request.response.redirect("%s/%s" % (self.context.absolute_url(), self.parent_view))
 
+
+
 class DeleteThemeForm(AutoExtensibleForm, form.Form):
     """Delete Theme Form control panel"""
-    schema = interfaces.IJQueryUIThemeSettings
+    schema = interfaces.IDeleteThemeFormSchema
     ignoreContext = True
     control_panel_view = "plone_control_panel"
     parent_view = "@@collective.jqueryuithememanager-controlpanel"
@@ -166,16 +143,21 @@ class DeleteThemeForm(AutoExtensibleForm, form.Form):
         data, errors = self.extractData()
         abs_url=self.context.absolute_url()
         url = abs_url+'/@@collective.jqueryuithememanager-delete-theme'
-        if data['theme'] == u'sunburst':
-            msg = i18n.err_deletetheme_sunburst
-            IStatusMessage(self.request).addStatusMessage(msg)
-            self.request.response.redirect(url)
-            return
 
         tm = theme.ThemeManager()
-        themes = tm.deleteTheme(data['theme'])
-        msg = i18n.msg_deletetheme_changes_saved
-        IStatusMessage(self.request).addStatusMessage(msg)
+        badreq = False
+        for themeid in data['themes']:
+            try:
+                tm.deleteTheme(themeid)
+            except BadRequest:
+                badreq = True
+
+        if badreq:
+            msg = i18n.err_deletetheme_badrequest
+        else:
+            msg = i18n.msg_deletetheme_changes_saved
+
+        IStatusMessage(self.request).add(msg)
         self.request.response.redirect(url)
 
     @button.buttonAndHandler(i18n.action_delete_allthemes)
@@ -212,3 +194,18 @@ def handleRegistryModified(settings, event):
         newtheme = tm.getThemeById(settings.theme)
         oldtheme.unactivate()
         newtheme.activate()
+
+class ThemesWhichNeedAnUpdate(BrowserView):
+    """
+    """
+    def themes(self):
+        """Return a list of theme object"""
+        tm = theme.ThemeManager()
+        themes = tm.getThemes()
+        return themes
+
+    def jsversion(self):
+        return config.VERSION
+    
+    def needupdate(self, theme):
+        return theme.version != config.VERSION

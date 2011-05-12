@@ -22,9 +22,28 @@ from collective.jqueryuithememanager import logger
 from zExceptions import NotFound
 from zExceptions import BadRequest
 
-class JQueryUIThemeVocabularyFactory(object):
+class PersistentThemeVocabularyFactory(object):
     """Vocabulary for jqueryui themes.
     """
+    interface.implements(IVocabularyFactory)
+
+    def __call__(self, context):
+        """Retrieve available themes inside persistent resource and add
+        sunburst and collective.js.jqueryui themes"""
+        tm = ThemeManager()
+        try:
+            items = [(id, id) for id in tm.getThemeIds()\
+                     if id not in ('sunburst','', None)]
+            return SimpleVocabulary.fromItems(items)
+        except TypeError:
+            logger.info('kss inline validation ... getSite doesn t return Plone site')
+            return SimpleVocabulary.fromItems([])
+
+PersistentThemeVocabulary = PersistentThemeVocabularyFactory()
+
+
+class JQueryUIThemeVocabularyFactory(object):
+    """Add sunburst theme to persistent"""
     interface.implements(IVocabularyFactory)
 
     def __call__(self, context):
@@ -87,17 +106,47 @@ class ThemeManager(object):
         """Return the list of available themes"""
         themeContainer = self.getThemeDirectory()
         themes = themeContainer.listDirectory()
-        #TODO: add sunburst
         themes = map(str, themes)
         themes.insert(0,'sunburst')
+        providers = self.getThemesProviders()
+        for provider in providers:
+            ids = provider.getThemeIds()
+            for id in ids:
+                if id not in themes:
+                    themes.append(id)
         return themes
+
+    def getThemes(self):
+        """Return the list of themes"""
+        themeids = self.getThemeIds()
+        return map(self.getThemeById, themeids)
     
     def getThemeById(self, id):
         """Return IJQueryUITheme object"""
+
         if id == "sunburst":
             return SunburstTheme(id, self)
 
-        return PersistentTheme(id, self)
+        #Check if it is in peristent folder
+        if id =="excite-bike":import pdb;pdb.set_trace()
+        themeContainer = self.getThemeDirectory()
+        if id in themeContainer.listDirectory():
+            return PersistentTheme(id, self)
+
+        #Return from provider
+        providers = self.getThemesProviders()
+        for provider in providers:
+            if id in provider.getThemeIds():
+                return provider.getThemeById(id)
+
+
+    def getThemesProviders(self):
+        providers = []
+        utilities = sorted(component.getUtilitiesFor(interfaces.IThemesProvider))
+        for utility in utilities:
+            pid, provider = utility
+            providers.append(provider)
+        return providers
 
     def getDefaultThemeId(self):
         """Return the configuration themeid currently used"""
@@ -128,7 +177,7 @@ class ThemeManager(object):
             if 'Texture' in key: datac[key] = '01_flat.png' #force to use flat
         theme = urlencode(datac).replace('%23','') # %23 is # and we don't want this in color code
         query+='&theme=%3F'+quote(theme)
-        logger.info('download : %s/?%s'%(BASE, query))
+#        logger.info('download : %s/?%s'%(BASE, query))
         download = urlopen(BASE+'?'+query)
         code = download.getcode()
     
@@ -153,16 +202,22 @@ class ThemeManager(object):
         for name in themeZip.namelist():
             member = themeZip.getinfo(name)
             path = member.filename.lstrip('/')
-            logger.info(path)
             path_splited = path.split('/')
-            if path_splited[0] != 'developpement-bundle' and \
+            version = ''
+            link = '' #get the link to rebuild this theme
+            if path_splited[0] != 'development-bundle' and \
                not path_splited[0].startswith('jquery-ui-themes-'):
+                continue
+            if path.endswith('version.txt'):
+                version = themeZip.open(member).read()
                 continue
             if len(path_splited)<2:
                 continue
             if path_splited[1] != 'themes':
                 continue
             themeid = path_splited[2]
+            if not themeid:
+                continue
             if themeid not in themeids:
                 themeids.append(themeid)
             newpath = themeid + '/'
@@ -174,6 +229,21 @@ class ThemeManager(object):
             elif path.endswith('.custom.css') or path.endswith('jquery-ui.css'):
                 data = themeZip.open(member).read()
                 folder.writeFile(newpath+'jqueryui.css', data)
+                if not version:
+                    #TODO: find version in the css itself
+                    data_splited = data.split('\n')
+                    version = ''.join(data_splited[1][len(" * jQuery UI CSS Framework "):])
+                    for line in data_splited:
+                        if "http://jqueryui.com/themeroller/" in line:
+                            link = line[line.index('http'):]
+            if version:
+                folder.writeFile(newpath+'version.txt',version)
+            elif version:
+                logger.error('no version.txt found')
+            if link:
+                folder.writeFile(newpath+'link.txt', link)
+            elif version:
+                logger.error('no link found')
 
         return map(self.getThemeById, themeids)
 
@@ -192,57 +262,32 @@ class ThemeManager(object):
         csstool.unregisterResource(theme.stylesheetid) #resource already re cooked
 
 
-class SunburstTheme(object):
-    """The theme provided by collective.js.jqueryui"""
+def checkZipFile(archive):
+    """Raise exception if not a zip"""
+    try:
+        themeZip = zipfile.ZipFile(archive)
+    except (zipfile.BadZipfile, zipfile.LargeZipFile,):
+        logger.exception("Could not read zip file")
+        raise TypeError('error_invalid_zip')
+    return themeZip
+
+
+
+class BaseTheme(object):
+    """A theme that works with browser:resourceDirectory"""
     interface.implements(interfaces.IJQueryUITheme)
+    BASE_PATH = ''
+    VERSION = ''
 
-    def __init__(self, id, manager):
-        if id != "sunburst":raise ValueError("Not Sunburst theme")
-        self.id = "sunburst"
-        self.manager = manager
-        self.stylesheetid = config.SUNBURST_CSS_ID
-
-    def activate(self):
-        csstool = self.manager.csstool()
-        stylesheets = csstool.getResourcesDict()
-        stylesheet = stylesheets.get(self.stylesheetid,None)
-        if stylesheet is None:
-            logger.info('the css of sunburst has not been found')
-            return
-        stylesheet.setEnabled(True)
-        patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
-        if patch is not None:
-            patch.setEnabled(True)
-        csstool.cookResources()
-
-    def unactivate(self):
-        csstool = self.manager.csstool()
-        stylesheets = csstool.getResourcesDict()
-        stylesheet = stylesheets.get(self.stylesheetid,None)
-        if stylesheet is None:
-            logger.info('the css of sunburst has not been found')
-            return
-        stylesheet.setEnabled(False)
-        patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
-        if patch is not None:
-            patch.setEnabled(False)
-        csstool.cookResources()
-
-
-class PersistentTheme(object):
-    """A theme store in plone.Resource
-    
-    The css must in portal_resources/jqueryuithemes/themeid/jqueryui.css
-    """
-    interface.implements(interfaces.IJQueryUITheme)
-
-    CSS_ID = "portal_resources/jqueryuitheme/%s/jqueryui.css"
-
-    def __init__(self, id, manager):
+    def __init__(self, id, manager, provider=None):
         self.id = id
         self.manager = manager
-        self._site = None
-        self.stylesheetid = self.CSS_ID%id
+        if provider:
+            self.stylesheetid = provider.BASE_PATH+id+'/jqueryui.css'
+            self.version = provider.VERSION
+        else:
+            self.stylesheetid = self.BASE_PATH+id+'/jqueryui.css'
+            self.version = self.VERSION
 
     def activate(self):
         csstool = self.manager.csstool()
@@ -262,16 +307,84 @@ class PersistentTheme(object):
         try:
             stylesheet = csstool.getResourcesDict().get(self.stylesheetid, None)
             if stylesheet:
-                csstool.unregisterStylesheet(self.stylesheetid)
+                csstool.unregisterResource(self.stylesheetid)
                 csstool.cookResources()
+            else:
+                logger.error('can t unactivate %s'%self.stylesheetid)
         except KeyError, e:
             logger.info('the old theme has not been found in resource directory')
 
-def checkZipFile(archive):
-    """Raise exception if not a zip"""
-    try:
-        themeZip = zipfile.ZipFile(archive)
-    except (zipfile.BadZipfile, zipfile.LargeZipFile,):
-        logger.exception("Could not read zip file")
-        raise TypeError('error_invalid_zip')
-    return themeZip
+
+
+class BaseThemeProvider(object):
+    """Browser resource directory base theme provider"""
+    interface.implements(interfaces.IThemesProvider)
+    RESOURCE_NAME = 'jqueryuithememanager'
+    BASE_PATH = '++resource++'+RESOURCE_NAME+'/'
+    THEME_IDS = ['base']
+    THEME_CLASS = BaseTheme
+    VERSION='1.8.12'
+
+    def __init__(self):
+        self.manager = ThemeManager()
+
+    def getThemeIds(self):
+        return self.THEME_IDS
+
+    def getThemeById(self, id):
+        return self.THEME_CLASS(id, self.manager, self)
+
+    def getThemes(self):
+        return map(self.getThemeById, self.getThemeIds())
+
+
+class SunburstTheme(BaseTheme):
+    """The theme provided by collective.js.jqueryui"""
+    interface.implements(interfaces.IJQueryUITheme)
+
+    def __init__(self, id, manager):
+        if id != "sunburst":raise ValueError("Not Sunburst theme")
+        self.id = id
+        self.manager = manager
+        self.stylesheetid = config.SUNBURST_CSS_ID
+        self.version = config.VERSION
+
+    def activate(self):
+        super(SunburstTheme, self).activate()
+        csstool = self.manager.csstool()
+        stylesheets = csstool.getResourcesDict()
+        patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
+        if patch is not None:
+            patch.setEnabled(True)
+        csstool.cookResources()
+
+    def unactivate(self):
+        super(SunburstTheme, self).unactivate()
+        csstool = self.manager.csstool()
+        stylesheets = csstool.getResourcesDict()
+        patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
+        if patch is not None:
+            patch.setEnabled(False)
+        csstool.cookResources()
+
+
+class PersistentTheme(BaseTheme):
+    """A theme store in plone.Resource
+    
+    The css must in portal_resources/jqueryuithemes/themeid/jqueryui.css
+    """
+    interface.implements(interfaces.IJQueryUITheme)
+
+    BASE_PATH = "portal_resources/jqueryuitheme/"
+
+    def __init__(self, id, manager):
+        super(PersistentTheme, self).__init__(id, manager)
+        self.version = ''
+        self.initialize()
+    
+    def initialize(self):
+        themeDirectory = self.manager.getThemeDirectory()
+        if self.id in themeDirectory.listDirectory():
+            folder = themeDirectory[self.id]
+            if 'version.txt' in folder.listDirectory():
+                self.version = folder.readFile('version.txt')

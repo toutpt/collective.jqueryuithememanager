@@ -47,17 +47,15 @@ Is there a jqueryuitheme folder with a css folder inside ?
     'jqueryuitheme'
     >>> resources['jqueryuitheme'].meta_type
     'BTreeFolder2'
-    >>> resources.jqueryuitheme.css.meta_type
-    'BTreeFolder2'
-    >>> themefolder = resources.jqueryuitheme.css
+    >>> themefolder = resources.jqueryuitheme
 
 Is my theme has been downloaded ?
 
     >>> 'mytheme' in themefolder.keys()
     True
-    >>> themefolder.mytheme['jquery-ui-.custom.css'].meta_type
+    >>> themefolder.mytheme['jqueryui.css'].meta_type
     'File'
-    >>> themefolder.mytheme['jquery-ui-.custom.css'].size > 0
+    >>> themefolder.mytheme['jqueryui.css'].size > 0
     True
     >>> images = []
     >>> images.extend(set(themefolder.mytheme.images))
@@ -81,7 +79,7 @@ and the sunburst must be unactivated
     >>> from collective.jqueryuithememanager import config
     >>> csstool = self.portal.portal_css
     >>> defaultcss = csstool.getResourcesDict()[config.SUNBURST_CSS_ID]
-    >>> currentcss = csstool.getResourcesDict()['portal_resources/jqueryuitheme/css/mytheme/jquery-ui-.custom.css']
+    >>> currentcss = csstool.getResourcesDict()['portal_resources/jqueryuitheme/mytheme/jqueryui.css']
     >>> defaultcss.getEnabled()
     False
     >>> currentcss.getEnabled()

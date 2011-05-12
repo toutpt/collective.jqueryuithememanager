@@ -10,21 +10,25 @@ class SunburstThemeTestCase(base.UnitTestCase):
     def setUp(self):
         super(SunburstThemeTestCase, self).setUp()
         from collective.jqueryuithememanager import theme
+        from collective.jqueryuithememanager import config
+        self.config = config
         self.theme_module = theme
-        self.theme = theme.SunburstTheme("sunburst", utils.FakeManager())
-    
+        tm = utils.FakeManager()
+        tm.csstool().registerStylesheet(config.SUNBURST_CSS_ID)
+        self.theme = theme.SunburstTheme("sunburst", tm)
+
     def test_stylesheetid(self):
-        self.failUnless(self.theme.stylesheetid == utils.JQUERYUI_CSS_ID)
-    
+        self.failUnless(self.theme.stylesheetid == self.config.SUNBURST_CSS_ID)
+
     def test_activate(self):
-        stylesheet = self.theme.manager.csstool().getResourcesDict()[utils.JQUERYUI_CSS_ID]
+        stylesheet = self.theme.manager.csstool().getResourcesDict()[self.config.SUNBURST_CSS_ID]
         self.failUnless(stylesheet.enabled) #must be enabled
         stylesheet.enabled = False
         self.theme.activate()
         self.failUnless(stylesheet.enabled) #must have been unabled
 
     def test_unactivate(self):
-        stylesheet = self.theme.manager.csstool().getResourcesDict()[utils.JQUERYUI_CSS_ID]
+        stylesheet = self.theme.manager.csstool().getResourcesDict()[self.config.SUNBURST_CSS_ID]
         self.failUnless(stylesheet.enabled) #must be enabled
         self.theme.unactivate()
         self.failUnless(not stylesheet.enabled) #must have been unabled
@@ -34,26 +38,29 @@ class PersistentThemeTestCase(base.UnitTestCase):
     def setUp(self):
         super(PersistentThemeTestCase, self).setUp()
         from collective.jqueryuithememanager import theme
+        from collective.jqueryuithememanager import config
+        self.config = config
+        self.theme_module = theme
         tm = utils.FakeManager()
-        tm.csstool().registerStylesheet(utils.CUSTOM_CSS_ID)
-        self.theme = theme.PersistentTheme(utils.CUSTOM_THEME_NAME, tm)
+        tm.csstool().registerStylesheet(config.SUNBURST_CSS_ID)
+        self.theme = theme.PersistentTheme('mytheme', tm)
+        self.CUSTOM_CSS_ID = 'portal_resources/jqueryuitheme/mytheme/jqueryui.css'
 
     def test_stylesheetid(self):
-        self.failUnless(self.theme.stylesheetid == utils.CUSTOM_CSS_ID)
+        self.failUnless(self.theme.stylesheetid == self.CUSTOM_CSS_ID)
 
     def test_activate(self):
-        stylesheet = self.theme.manager.csstool().getResourcesDict()[utils.CUSTOM_CSS_ID]
-        self.failUnless(stylesheet.enabled) #must be enabled
-        stylesheet.enabled = False
+        stylesheet = self.theme.manager.csstool().getResourcesDict().get(self.CUSTOM_CSS_ID, None)
+        self.failUnless(stylesheet is None) #must be enabled
         self.theme.activate()
+        stylesheet = self.theme.manager.csstool().getResourcesDict().get(self.CUSTOM_CSS_ID, None)
+        self.failUnless(stylesheet is not None) #must be enabled
         self.failUnless(stylesheet.enabled) #must have been unabled
         self.failUnless(stylesheet.prefixed)
 
-    def test_unactivate(self):
-        stylesheet = self.theme.manager.csstool().getResourcesDict()[utils.CUSTOM_CSS_ID]
-        self.failUnless(stylesheet.enabled) #must be enabled
         self.theme.unactivate()
-        self.failUnless(not stylesheet.enabled) #must have been unabled
+        stylesheet = self.theme.manager.csstool().getResourcesDict().get(self.CUSTOM_CSS_ID, None)
+        self.failUnless(stylesheet is None) #must be enabled
 
 class ThemeManagerTestCase(base.UnitTestCase):
     def setUp(self):
