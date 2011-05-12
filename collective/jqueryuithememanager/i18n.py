@@ -8,8 +8,8 @@ desc_cdn = _(u"desc_cdn", default=u"Default is http://ajax.googleapis.com/ajax/l
 
 label_theme = _(u"label_theme", default=u"Theme")
 label_themes = _(u"label_themes", default=u"Themes")
-label_selectcontrolpanel = _(u"Select a JQueryUI Theme")
-customcontrolpanel_label = _(u"JQuery UI custom theme settings")
+label_selectcontrolpanel = _(u"label_selectcontrolpanel", default=u"Select a JQueryUI Theme")
+customcontrolpanel_label = _(u"customcontrolpanel_label", default=u"Create or modify a theme")
 msg_customtheme_changes_saved = _(u"Your custom theme has been install. You can now select it.")
 msg_importtheme_changes_saved = _(u"Theme imported. You may want to select this theme.")
 err_importtheme_typeerror = _(u"You must upload a zip")
@@ -22,14 +22,14 @@ msg_defaulttheme_loaded = _(u"Default themes as been loaded.")
 action_delete_theme = _(u"Delete")
 action_delete_allthemes = _(u"Delete all themes")
 
-label_importtheme_form = _(u"label_importtheme_form", default=u"Import one or more themes")
+label_importtheme_form = _(u"label_importtheme_form", default=u"Import themes")
 
 label_theme_archive= _(u"Theme archive")
 desc_theme_archive= _(u"The archive mut provide the structure provided by http://jqueryui.com/themeroller archive.")
 
 msg_deletetheme_changes_saved = _(u"The theme has been deleted")
 msg_deletethemes_changes_saved = _(u"All persistent themes has been deleted")
-label_deletetheme_form = _(u"label_deletetheme_form", default=u"Delete one or more themes")
+label_deletetheme_form = _(u"label_deletetheme_form", default=u"Delete themes")
 err_deletetheme_sunburst = _(u"Sunburst can not be deleted. It is the default theme")
 
 themename           = _(u"themename", default=u"Theme name (ascii)")
