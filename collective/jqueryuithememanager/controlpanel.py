@@ -43,7 +43,7 @@ class MainControlPanelView(BrowserView):
 
 class SelectThemeControlPanelForm(RegistryEditForm):
     """Select a theme control panel"""
-    schema = interfaces.IJQueryUIThemeSettings
+    schema = interfaces.IDefaultThemeFormSchema
     control_panel_view = "collective.jqueryuithememanager-controlpanel"
 
 SelectThemeControlPanelView = layout.wrap_form(SelectThemeControlPanelForm,
@@ -53,7 +53,7 @@ SelectThemeControlPanelView.label = i18n.label_selectcontrolpanel
 
 class CustomControlPanelForm(RegistryEditForm):
     """Create or modify a theme control panel"""
-    schema = interfaces.IJQueryUITheme
+    schema = interfaces.IJQueryUIThemeSettings
     control_panel_view = "collective.jqueryuithememanager-controlpanel"
 
     def applyChanges(self, data):
@@ -164,11 +164,18 @@ class DeleteThemeForm(AutoExtensibleForm, form.Form):
     def handleDeleteAllThemes(self, action):
         tm = theme.ThemeManager()
         themeids = tm.getThemeIds()
+        badreq = False
         for themeid in themeids:
             if themeid == 'sunburst':continue
-            tm.deleteTheme(themeid)
+            try:
+                tm.deleteTheme(themeid)
+            except BadRequest:
+                badreq = True
 
-        msg = i18n.msg_deletethemes_changes_saved
+        if badreq:
+            msg = i18n.err_deletetheme_badrequest
+        else:
+            msg = i18n.msg_deletethemes_changes_saved
         IStatusMessage(self.request).addStatusMessage(msg)
         abs_url=self.context.absolute_url()
         url="%s/%s" % (abs_url, self.parent_view)
@@ -183,7 +190,7 @@ class DeleteThemeFormWrapper(layout.FormWrapper):
     form = DeleteThemeForm
     index = ViewPageTemplateFile('controlpanel_layout.pt')
 
-@component.adapter(interfaces.IJQueryUIThemeSettings, IRecordModifiedEvent)
+@component.adapter(interfaces.IDefaultThemeFormSchema, IRecordModifiedEvent)
 def handleRegistryModified(settings, event):
     """Handle configuration change in the registry on theme config"""
     #FIRST: remove old resource

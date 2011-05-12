@@ -83,7 +83,7 @@ class ThemeManager(object):
 
     def settings(self):
         if self._settings is None:
-            self._settings = component.getUtility(IRegistry).forInterface(interfaces.IJQueryUIThemeSettings)
+            self._settings = component.getUtility(IRegistry).forInterface(interfaces.IDefaultThemeFormSchema)
         return self._settings
 
 
@@ -128,7 +128,6 @@ class ThemeManager(object):
             return SunburstTheme(id, self)
 
         #Check if it is in peristent folder
-        if id =="excite-bike":import pdb;pdb.set_trace()
         themeContainer = self.getThemeDirectory()
         if id in themeContainer.listDirectory():
             return PersistentTheme(id, self)
@@ -255,11 +254,9 @@ class ThemeManager(object):
             self.setDefaultThemeId('sunburst')
 
         theme = self.getThemeById(themeid)
+        theme.unactivate()
         folder = self.getThemeDirectory()
         del folder[themeid]
-
-        csstool = self.csstool()
-        csstool.unregisterResource(theme.stylesheetid) #resource already re cooked
 
 
 def checkZipFile(archive):
@@ -291,28 +288,22 @@ class BaseTheme(object):
 
     def activate(self):
         csstool = self.manager.csstool()
-        try:
-            stylesheet = csstool.getResourcesDict().get(self.stylesheetid, None)
-            if not stylesheet:
-                csstool.registerStylesheet(self.stylesheetid)
-                stylesheet = csstool.getResourcesDict()[self.stylesheetid]
-            stylesheet.setApplyPrefix(True)
-            stylesheet.setEnabled(True)
-            csstool.cookResources()
-        except NotFound, e:
-            logger.info('the new theme has not been found in resource directory')
+        stylesheet = csstool.getResourcesDict().get(self.stylesheetid, None)
+        if not stylesheet:
+            csstool.registerStylesheet(self.stylesheetid)
+            stylesheet = csstool.getResourcesDict()[self.stylesheetid]
+        stylesheet.setApplyPrefix(True)
+        stylesheet.setEnabled(True)
+        csstool.cookResources()
 
     def unactivate(self):
         csstool = self.manager.csstool()
-        try:
-            stylesheet = csstool.getResourcesDict().get(self.stylesheetid, None)
-            if stylesheet:
-                csstool.unregisterResource(self.stylesheetid)
-                csstool.cookResources()
-            else:
-                logger.error('can t unactivate %s'%self.stylesheetid)
-        except KeyError, e:
-            logger.info('the old theme has not been found in resource directory')
+        stylesheet = csstool.getResourcesDict().get(self.stylesheetid, None)
+        if stylesheet:
+            csstool.unregisterResource(self.stylesheetid)
+            csstool.cookResources()
+        else:
+            logger.info('can t unactivate %s'%self.stylesheetid)
 
 
 
@@ -350,23 +341,31 @@ class SunburstTheme(BaseTheme):
         self.version = config.VERSION
 
     def activate(self):
-        super(SunburstTheme, self).activate()
         csstool = self.manager.csstool()
-        stylesheets = csstool.getResourcesDict()
-        patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
-        if patch is not None:
-            patch.setEnabled(True)
-        csstool.cookResources()
+        try:
+            stylesheets = csstool.getResourcesDict()
+            stylesheet = csstool.getResourcesDict()[self.stylesheetid]
+            stylesheet.setEnabled(True)
+            patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
+            if patch is not None:
+                patch.setEnabled(True)
+            csstool.cookResources()
+        except NotFound, e:
+            logger.info('the new theme has not been found in resource directory')
 
     def unactivate(self):
-        super(SunburstTheme, self).unactivate()
         csstool = self.manager.csstool()
-        stylesheets = csstool.getResourcesDict()
-        patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
-        if patch is not None:
-            patch.setEnabled(False)
-        csstool.cookResources()
+        try:
+            stylesheets = csstool.getResourcesDict()
+            stylesheet = csstool.getResourcesDict()[self.stylesheetid]
+            stylesheet.setEnabled(False)
+            patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
+            if patch is not None:
+                patch.setEnabled(False)
+            csstool.cookResources()
 
+        except KeyError, e:
+            logger.info('the old theme has not been found in resource directory')
 
 class PersistentTheme(BaseTheme):
     """A theme store in plone.Resource

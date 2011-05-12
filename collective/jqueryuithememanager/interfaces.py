@@ -17,13 +17,6 @@ from collective.jqueryuithememanager import config
 class IJQueryUIThemeManagerLayer(interface.Interface):
     """Browser layer"""
 
-class IJQueryUIThemeSettings(interface.Interface):
-    """JQueryUIThem settings"""
-
-    theme = schema.Choice(title=i18n.label_theme,
-                          required=True,
-                          default='sunburst',
-                          vocabulary='collective.jqueryuithememanager.vocabularies.themes')
 
 class IJQueryUITheme(interface.Interface):
     """A JQueryUI Theme object"""
@@ -71,7 +64,7 @@ class IJQueryUIThemeManager(IThemesProvider):
         folder at second level"""
 
 
-class IJQueryUITheme(interface.Interface):
+class IJQueryUIThemeSettings(interface.Interface):
     """Define a JQuery UI Theme"""
     
     name = schema.ASCIILine(title=i18n.themename)
@@ -221,8 +214,15 @@ for i in config.THEME_SETTINGS:
     if 'color' not in i.lower() and not i.startswith('fc'):continue
     COLOR_WIDGETS[i] = 'collective.z3cform.colorpicker.colorpicker.ColorpickerFieldWidget'
 
-IJQueryUITheme.setTaggedValue(WIDGETS_KEY, COLOR_WIDGETS)
+IJQueryUIThemeSettings.setTaggedValue(WIDGETS_KEY, COLOR_WIDGETS)
 
+class IDefaultThemeFormSchema(interface.Interface):
+    """JQueryUIThem settings"""
+
+    theme = schema.Choice(title=i18n.label_theme,
+                          required=True,
+                          default='sunburst',
+                          vocabulary='collective.jqueryuithememanager.vocabularies.themes')
 
 class IDeleteThemeFormSchema(interface.Interface):
     """Delete theme form"""
