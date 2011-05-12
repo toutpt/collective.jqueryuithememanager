@@ -178,7 +178,7 @@ class DeleteThemeForm(AutoExtensibleForm, form.Form):
             msg = i18n.err_deletetheme_badrequest
         else:
             msg = i18n.msg_deletethemes_changes_saved
-        IStatusMessage(self.request).addStatusMessage(msg)
+        IStatusMessage(self.request).add(msg)
         abs_url=self.context.absolute_url()
         url="%s/%s" % (abs_url, self.parent_view)
         self.request.response.redirect(url)
@@ -218,3 +218,17 @@ class ThemesWhichNeedAnUpdate(BrowserView):
     
     def needupdate(self, theme):
         return theme.version != config.VERSION
+
+
+class UpdateTheme(BrowserView):
+    """Update a theme"""
+    def __call__(self):
+        id = self.request.get('id')
+        tm = theme.ThemeManager()
+        tm.updateTheme(id)
+        abs_url = self.context.absolute_url()
+        url="%s/collective.jqueryuithememanager-update-themes"%abs_url 
+        msg = u"Theme has been updated"
+        IStatusMessage(self.request).add(msg)
+        self.request.response.redirect(url)
+

@@ -68,6 +68,12 @@
     template="controlpanel_update.pt"
     permission="cmf.ManagePortal"
     />
+  <browser:page
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    name="collective.jqueryuithememanager-update-theme"
+    class=".controlpanel.UpdateTheme"
+    permission="cmf.ManagePortal"
+    />
 
   <browser:resource
     name="jqueryui_icon.jpg"

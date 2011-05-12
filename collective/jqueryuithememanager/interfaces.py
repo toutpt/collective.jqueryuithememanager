@@ -63,6 +63,9 @@ class IJQueryUIThemeManager(IThemesProvider):
         """Import themes from themeArchive. The archive must have a 'themes'
         folder at second level"""
 
+    def updateTheme(id):
+        """Update a theme to fit with the js system version"""
+
 
 class IJQueryUIThemeSettings(interface.Interface):
     """Define a JQuery UI Theme"""

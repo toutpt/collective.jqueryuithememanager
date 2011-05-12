@@ -2,7 +2,7 @@ import os
 import zipfile
 import StringIO
 
-from urlparse import urlparse
+from urlparse import urlparse, parse_qs
 from urllib import urlencode, quote, quote_plus, unquote, unquote_plus
 from urllib2 import urlopen
 
@@ -107,7 +107,8 @@ class ThemeManager(object):
         themeContainer = self.getThemeDirectory()
         themes = themeContainer.listDirectory()
         themes = map(str, themes)
-        themes.insert(0,'sunburst')
+        if 'sunburst' not in themes:
+            themes.insert(0,'sunburst')
         providers = self.getThemesProviders()
         for provider in providers:
             ids = provider.getThemeIds()
@@ -254,10 +255,15 @@ class ThemeManager(object):
             self.setDefaultThemeId('sunburst')
 
         theme = self.getThemeById(themeid)
-        theme.unactivate()
         folder = self.getThemeDirectory()
         del folder[themeid]
 
+
+    def updateTheme(self, id):
+        theme = self.getThemeById(id)
+        params = theme.getParams()
+        params['name']=id
+        self.downloadTheme(params)
 
 def checkZipFile(archive):
     """Raise exception if not a zip"""
@@ -279,6 +285,7 @@ class BaseTheme(object):
     def __init__(self, id, manager, provider=None):
         self.id = id
         self.manager = manager
+        self.provider = provider
         if provider:
             self.stylesheetid = provider.BASE_PATH+id+'/jqueryui.css'
             self.version = provider.VERSION
@@ -305,6 +312,30 @@ class BaseTheme(object):
         else:
             logger.info('can t unactivate %s'%self.stylesheetid)
 
+    def getParams(self):
+        link = self.getThemeRollerLink()
+        query_string = urlparse(link).query
+        query = parse_qs(query_string)
+        return query
+
+    def getThemeRollerLink(self):
+        link = None
+        if self.provider is not None:
+            link = self.provider.THEME_ROLLER.get(self.id,None)
+            if link is not None: return link
+        #don t find in metadata, lets extract from the css
+        csstool = self.manager.csstool()
+        site = component.getSiteManager()
+        #Weird code, .GET broke the page, I don't find an other way to get the content of the CSS
+        path = site.restrictedTraverse(self.stylesheetid).context.path
+        f = open(path,'rb')
+        data = f.read()
+        f.close()
+        data_splited = data.split('\n')
+        for line in data_splited:
+            if "http://jqueryui.com/themeroller/" in line:
+                link = line[line.index('http'):]
+        return link
 
 
 class BaseThemeProvider(object):
@@ -313,6 +344,7 @@ class BaseThemeProvider(object):
     RESOURCE_NAME = 'jqueryuithememanager'
     BASE_PATH = '++resource++'+RESOURCE_NAME+'/'
     THEME_IDS = ['base']
+    THEME_ROLLER = {'base':'http://jqueryui.com/themeroller'}
     THEME_CLASS = BaseTheme
     VERSION='1.8.12'
 
@@ -339,6 +371,7 @@ class SunburstTheme(BaseTheme):
         self.manager = manager
         self.stylesheetid = config.SUNBURST_CSS_ID
         self.version = config.VERSION
+        self.provider = None
 
     def activate(self):
         csstool = self.manager.csstool()
@@ -367,6 +400,8 @@ class SunburstTheme(BaseTheme):
         except KeyError, e:
             logger.info('the old theme has not been found in resource directory')
 
+
+
 class PersistentTheme(BaseTheme):
     """A theme store in plone.Resource
     
@@ -387,3 +422,12 @@ class PersistentTheme(BaseTheme):
             folder = themeDirectory[self.id]
             if 'version.txt' in folder.listDirectory():
                 self.version = folder.readFile('version.txt')
+
+    def getThemeRollerLink(self):
+        themeDirectory = self.manager.getThemeDirectory()
+        if self.id in themeDirectory.listDirectory():
+            folder = themeDirectory[self.id]
+            if 'link.txt' in folder.listDirectory():
+                link = folder.readFile('link.txt')
+        return link
+

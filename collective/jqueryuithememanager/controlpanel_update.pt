@@ -37,12 +37,14 @@
         <th><span i18n:translate="">Theme id</span></th>
         <th><span i18n:translate="">Theme version</span></th>
         <th><span i18n:translate="">Update</span></th>
+        <th><span i18n:translate="">Theme Roller</span></th>
     </tr>
     <tal:block repeat="theme view/themes">
     <tr>
       <td><span tal:content="theme/id">theme id</span></td>
       <td><span tal:content="theme/version">theme version</span></td>
-      <td><span tal:condition="python:view.needupdate(theme)">UPDATE BUTTON</span></td>
+      <td><span tal:condition="python:view.needupdate(theme)"><a tal:attributes="href string:${view/context/absolute_url}/collective.jqueryuithememanager-update-theme?id=${theme/id}">update</a></span></td>
+      <td><a tal:attributes="href string:${theme/getThemeRollerLink}">jqueryui.com</a></td>
     </tr>
     </tal:block>
     </table>
