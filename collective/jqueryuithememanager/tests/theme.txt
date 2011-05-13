@@ -67,7 +67,7 @@ So now lets used that theme and control the import has not activated it
     >>> browser.getLink('JQueryUI theme manager').click()
     >>> browser.getLink('Select a theme').click()
     >>> browser.getControl('Theme').displayOptions
-    ['sunburst', 'base', 'mytheme']
+    ['base', 'mytheme', 'sunburst']
     >>> browser.getControl('Theme').getControl('mytheme').selected = True
     >>> browser.getControl('Save').click()
     >>> 'Changes saved' in browser.contents

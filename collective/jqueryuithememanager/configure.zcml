@@ -24,78 +24,29 @@
   <include package="plone.app.registry"/>
   <include package="collective.z3cform.colorpicker"/>
 
-  <browser:page
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    name="collective.jqueryuithememanager-controlpanel"
-    class=".controlpanel.MainControlPanelView"
-    template="controlpanel_main.pt"
-    permission="cmf.ManagePortal"
-    />
-  <browser:page
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    name="collective.jqueryuithememanager-select"
-    class=".controlpanel.SelectThemeControlPanelView"
-    permission="cmf.ManagePortal"
-    />
-  <browser:page
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    name="collective.jqueryuithememanager-custom-controlpanel"
-    class=".controlpanel.CustomControlPanelView"
-    permission="cmf.ManagePortal"
-    />
-  <browser:page
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    name="jqueryui-import-theme"
-    class=".controlpanel.ImportThemeFormWrapper"
-    permission="cmf.ManagePortal"
-    />
-  <browser:page
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    name="collective.jqueryuithememanager-load-default-themes"
-    class=".controlpanel.LoadDefaultThemes"
-    permission="cmf.ManagePortal"
-    />
-  <browser:page
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    name="collective.jqueryuithememanager-delete-theme"
-    class=".controlpanel.DeleteThemeFormWrapper"
-    permission="cmf.ManagePortal"
-    />
-  <browser:page
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    name="collective.jqueryuithememanager-update-themes"
-    class=".controlpanel.ThemesWhichNeedAnUpdate"
-    template="controlpanel_update.pt"
-    permission="cmf.ManagePortal"
-    />
-  <browser:page
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-    name="collective.jqueryuithememanager-update-theme"
-    class=".controlpanel.UpdateTheme"
-    permission="cmf.ManagePortal"
+
+  <utility
+    factory=".manager.ThemeManager"
+    provides=".interfaces.IJQueryUIThemeManager"
     />
 
-  <browser:resource
-    name="jqueryui_icon.jpg"
-    file="jqueryui_icon.jpg"
-    />
-  <browser:resourceDirectory
-    name="jqueryuithememanager"
-    directory="themes"
-    />
+
   <utility
-    factory=".theme.BaseThemeProvider"
-    name="jqueryuithememanager"
-    provides=".interfaces.IThemesProvider"
+    factory=".provider.PersistentThemeProvider"
+    name="portal_resources_jqueryuithemes"
+    provides=".interfaces.IPersistentThemesProvider"
     />
 
-  <subscriber handler=".controlpanel.handleRegistryModified" />
+  <subscriber handler=".registry.handleRegistryModified" />
   <utility
-    component=".theme.JQueryUIThemeVocabulary"
+    component=".vocabulary.JQueryUIThemeVocabulary"
     name="collective.jqueryuithememanager.vocabularies.themes"
     />
   <utility
-    component=".theme.PersistentThemeVocabulary"
+    component=".vocabulary.PersistentThemeVocabulary"
     name="collective.jqueryuithememanager.vocabularies.persistentthemes"
     />
+
+  <include package=".browser"/>
+
 </configure>

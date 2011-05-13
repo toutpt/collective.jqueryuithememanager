@@ -5,48 +5,74 @@ from zope.schema import vocabulary
 from collective.jqueryuithememanager import i18n
 from collective.jqueryuithememanager import config
 
-#TODO: add themes from plone.resource
-#themes = []
-#themes.append(vocabulary.SimpleVocabulary.createTerm(config.BASE_THEMEID,config.BASE_THEMEID,config.BASE_THEMEID))
-#themes.append(vocabulary.SimpleVocabulary.createTerm(config.CUSTOM_THEMEID,config.CUSTOM_THEMEID,config.CUSTOM_THEMEID))
-#for theme in config.PRELOADEDS:
-#    themes.append(vocabulary.SimpleTerm(theme, theme, theme))
-#theme_vocabulary = vocabulary.SimpleVocabulary(themes)
-
-
 class IJQueryUIThemeManagerLayer(interface.Interface):
     """Browser layer"""
 
 
-class IJQueryUITheme(interface.Interface):
-    """A JQueryUI Theme object"""
-    
-    stylesheetid = schema.ASCIILine(title=u"Stylesheet ID")
-    
-    version = schema.ASCIILine(title=i18n.label_theme_version)
-    
-    def activate():
-        """set enabled to True to the stylesheet in css registry"""
-    
-    def unactivate():
-        """set enabled to False to the stylesheet in css registry"""
 
 class IThemesProvider(interface.Interface):
-    """You can create a themes provider"""
+    """A IThemeProver object is a registry of theme in read only mode.
+    It is used as an entry point for external add-ons who want to provide
+    jqueryuitheme. It can be seen has a theme container"""
     
     def getThemesIds():
         """Return a list of all theme ids"""
 
     def getThemeById(id):
-        """Return the theme provided by id"""
+        """Return the theme with id=id. If the theme doesn't exist it create
+        a new one but doesn't create resources. You must use theme manager
+        for that. If id is None return None"""
 
     def getThemes():
         """Return a list of ITheme objects"""
 
+class IJQueryUITheme(interface.Interface):
+    """A JQueryUI Theme object."""
+    
+    stylesheetid = schema.ASCIILine(title=u"Stylesheet ID")
+    
+    version = schema.ASCIILine(title=i18n.label_theme_version)
+    
+    provider = schema.Object(title=u"theme provider", schema=IThemesProvider)
+    
+    def activate():
+        """Register the theme in the css registry."""
+    
+    def unactivate():
+        """Unregister the theme from the css registry."""
+
+    def getThemeRollerLink():
+        """Return the link to jqueryui.com/themeroller to configure it"""
+
+
+
+class IPersistentThemesProvider(IThemesProvider):
+    """A persistent theme provider is an extended IThemesProvider. You can
+    add, modify, delete, import themes.
+    """
+
+    def downloadTheme(params):
+        """Download theme from jqueryui.com base on provided properties.
+        return IJQueryUITheme object
+        """
+
+    def getThemes(archive=None):
+        """if archive is provided, import themes from it and return IJQueryUITHeme objects.
+        """
+
+    def deleteTheme(id):
+        """Delete a theme. If the theme is used as default, the system default
+        (undeletable) theme will be set as default."""
+
+    def updateTheme(id):
+        """Update a theme to fit with the js system version"""
 
 class IJQueryUIThemeManager(IThemesProvider):
-    """A IJQueryUITheme manager"""
-
+    """A IJQueryUITheme manager, is an aggregation of IThemesProvider
+    
+    Plus it store a 'default' IJQueryUITheme
+    
+    """
 
     def getDefaultThemeId():
         """Return the default theme id"""
@@ -54,18 +80,15 @@ class IJQueryUIThemeManager(IThemesProvider):
     def setDefaultThemeId(id):
         """Set the default theme used by the theme manager"""
 
-    def downloadTheme(data):
-        """Download theme from jqueryui.com base on provided properties.
-        return IJQueryUITheme object
-        """
+    def getThemesProviders():
+        """Return a list of IThemesProvider. The first one is a persistent and
+        is the default one used to create, modify themes."""
 
-    def getThemesFromZip(themeArchive):
-        """Import themes from themeArchive. The archive must have a 'themes'
-        folder at second level"""
+    def getCSSRegistry():
+        """Return the css registry"""
 
-    def updateTheme(id):
-        """Update a theme to fit with the js system version"""
-
+    def getDefaultPersistentThemesProvider():
+        """Return the default theme provider to use for create, modify themes"""
 
 class IJQueryUIThemeSettings(interface.Interface):
     """Define a JQuery UI Theme"""

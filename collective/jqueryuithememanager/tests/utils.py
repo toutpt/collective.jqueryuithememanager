@@ -1,13 +1,76 @@
+class FakeProvider(object):
+    BASE_PATH = '++resource++fakeresource'
+    VERSION='1.8.55'
 
-class FakeManager:
     def __init__(self):
-        self._tool = FakeCSSTool()
+        self.themes = {}
+
+    def getThemesIds(self):
+        return self.themes.keys()
+
+    def getThemeById(self, id):
+        return self.themes.get(id,None)
+
+    def getThemes(self):
+        return self.themes.values()
+
+class FakePersistentProvider(FakeProvider):
+    BASE_PATH = 'portal_resources/jqueryuitheme'
+    VERSION='1.8.55'
+
+    def __init__(self):
+        super(FakePersistentProvider, self).__init__()
         self._directory = FakeResourceDirectory()
-    def csstool(self):
-        return self._tool
+
+    def downloadTheme(self, params):
+        pass
+
+    def getThemes(self, archive=None):
+        if archive is None: 
+            return super(FakePeristentProvider, self).getThemes()
+        return []
+
+    def deleteTheme(self, id):
+        del self.themes[id]
+
+    def updateTheme(self, id):
+        pass
 
     def getThemeDirectory(self):
         return self._directory
+
+class FakeManager(object):
+    def __init__(self):
+        self._tool = FakeCSSTool()
+        self._providers = [FakePersistentProvider(), FakeProvider()]
+        self._default = 'sunburst'
+
+    def getCSSRegistry(self):
+        return self._tool
+
+    def getDefaultThemeId(self):
+        return self._default
+    
+    def setDefaultThemeId(self, id):
+        self._default = id
+
+    def getThemesProviders(self):
+        return self._providers
+    
+    def getThemesIds(self):
+        providers = self.getThemesProviders()
+        for provider in providers:
+            for id in provider.getThemesIds():
+                if id not in ids:
+                    ids.
+
+    def getThemeById(self, id):
+        return self.themes.get(id,None)
+
+    def getThemes(self):
+        return self.themes.values()
+
+
     
 class FakeCSSTool:
     def __init__(self):

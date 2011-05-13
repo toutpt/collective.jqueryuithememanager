@@ -1,4 +1,11 @@
 <registry>
   <records interface="collective.jqueryuithememanager.interfaces.IDefaultThemeFormSchema" purge="true" />
   <records interface="collective.jqueryuithememanager.interfaces.IJQueryUIThemeSettings" />
+  <record name="collective.jqueryui.defaulpersistentprovider">
+    <field type="plone.registry.field.ASCIILine">
+        <title>Default persistent themes provider</title>
+    </field>
+    <value>portal_resources_jqueryuithemes</value>
+  </record>
+
 </registry>
