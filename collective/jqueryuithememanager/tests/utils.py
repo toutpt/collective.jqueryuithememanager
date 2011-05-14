@@ -59,10 +59,12 @@ class FakeManager(object):
     
     def getThemesIds(self):
         providers = self.getThemesProviders()
+        ids = []
         for provider in providers:
             for id in provider.getThemesIds():
                 if id not in ids:
-                    ids.
+                    ids.append(id)
+        return ids
 
     def getThemeById(self, id):
         return self.themes.get(id,None)

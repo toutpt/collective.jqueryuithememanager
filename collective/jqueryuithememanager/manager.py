@@ -45,25 +45,20 @@ class ThemeManager(object):
 
     def getThemesProviders(self):
         providers = []
-        names = []
-        persistents = sorted(component.getUtilitiesFor(interfaces.IPersistentThemesProvider))
         utilities = sorted(component.getUtilitiesFor(interfaces.IThemesProvider))
-        for utility in persistents:
-            name, provider = utility
-            names.append(name)
-            providers.append(provider)
-
         #WARNING: self is a IThemeProvier, so remove it from results
         for utility in utilities:
             name, provider = utility
-            if name not in names and provider is not self:
+            if name == 'portal_resources_jqueryuithemes':
+                providers.insert(0, provider)
+            elif provider is not self:
                 providers.append(provider)
 
         return providers
 
-    def getDefaultPersistentThemesProvider(self):
+    def getPersistentThemesProvider(self):
         registry = component.getUtility(IRegistry)
-        name = registry['collective.jqueryui.defaulpersistentprovider']
+        name = 'portal_resources_jqueryuithemes'
         return component.queryUtility(interfaces.IPersistentThemesProvider,
                                       name)
 

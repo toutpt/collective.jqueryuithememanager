@@ -68,10 +68,8 @@ class IPersistentThemesProvider(IThemesProvider):
         """Update a theme to fit with the js system version"""
 
 class IJQueryUIThemeManager(IThemesProvider):
-    """A IJQueryUITheme manager, is an aggregation of IThemesProvider
-    
-    Plus it store a 'default' IJQueryUITheme
-    
+    """A IJQueryUITheme manager, is an aggregation of IThemesProvider with
+    a peristent theme provider to be able to customize a theme
     """
 
     def getDefaultThemeId():
@@ -81,13 +79,14 @@ class IJQueryUIThemeManager(IThemesProvider):
         """Set the default theme used by the theme manager"""
 
     def getThemesProviders():
-        """Return a list of IThemesProvider. The first one is a persistent and
-        is the default one used to create, modify themes."""
+        """Return a list of IThemesProvider. The persistent themesProvider
+        is the first, it as precedence on all other ones. It is like the
+        custom folder in portal_skin."""
 
     def getCSSRegistry():
         """Return the css registry"""
 
-    def getDefaultPersistentThemesProvider():
+    def getPersistentThemesProvider():
         """Return the default theme provider to use for create, modify themes"""
 
 class IJQueryUIThemeSettings(interface.Interface):

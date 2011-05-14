@@ -62,7 +62,7 @@ class CustomControlPanelForm(RegistryEditForm):
     def applyChanges(self, data):
         super(CustomControlPanelForm, self).applyChanges(data)
         tm = getThemeManager()
-        tp = tm.getDefaultPersistentThemesProvider()
+        tp = tm.getPersistentThemesProvider()
         tp.downloadTheme(data)
         IStatusMessage(self.request).add(i18n.msg_customtheme_changes_saved)
 
@@ -95,7 +95,7 @@ class ImportThemeForm(AutoExtensibleForm, form.Form):
         abs_url=self.context.absolute_url()
         try:
             tm = getThemeManager()
-            tp = tm.getDefaultPersistentThemesProvider()
+            tp = tm.getPersistentThemesProvider()
             themes = tp.getThemes(archive=sio)
             msg = i18n.msg_importtheme_changes_saved
             IStatusMessage(self.request).addStatusMessage(msg)
@@ -131,7 +131,7 @@ class LoadDefaultThemes(BrowserView):
         jqueryui_content = urllib.urlopen(url).read()
         themeArchive = StringIO.StringIO(jqueryui_content)
         tm = getThemeManager()
-        tp = tm.getDefaultPersistentThemesProvider()
+        tp = tm.getPersistentThemesProvider()
         themes = tp.getThemes(archive=themeArchive) #load themes !
         IStatusMessage(self.request).addStatusMessage(i18n.msg_defaulttheme_loaded)
         self.request.response.redirect("%s/%s" % (self.context.absolute_url(), self.parent_view))
@@ -152,7 +152,7 @@ class DeleteThemeForm(AutoExtensibleForm, form.Form):
         url = abs_url+'/@@collective.jqueryuithememanager-delete-theme'
 
         tm = getThemeManager()
-        tp = tm.getDefaultPersistentThemesProvider()
+        tp = tm.getPersistentThemesProvider()
         badreq = False
         for themeid in data['themes']:
             try:
@@ -171,7 +171,7 @@ class DeleteThemeForm(AutoExtensibleForm, form.Form):
     @button.buttonAndHandler(i18n.action_delete_allthemes)
     def handleDeleteAllThemes(self, action):
         tm = getThemeManager()
-        tp = tm.getDefaultPersistentThemesProvider()
+        tp = tm.getPersistentThemesProvider()
         themeids = tp.getThemeIds()
         badreq = False
         for themeid in themeids:
@@ -221,7 +221,7 @@ class UpdateTheme(BrowserView):
     def __call__(self):
         id = self.request.get('id')
         tm = getThemeManager()
-        tp = tm.getDefaultPersistentThemesProvider()
+        tp = tm.getPersistentThemesProvider()
         tp.updateTheme(id)
         abs_url = self.context.absolute_url()
         url="%s/collective.jqueryuithememanager-update-themes"%abs_url 

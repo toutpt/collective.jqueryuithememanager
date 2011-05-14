@@ -23,7 +23,7 @@ class PersistentThemeProvider(object):
     BASE_PATH = 'portal_resources/jqueryuitheme/'
     VERSION = ''
 
-    def __init__(self, manager=None):
+    def __init__(self):
         self._site = None
         self._themeid = None
         self._settings = None
