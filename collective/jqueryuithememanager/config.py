@@ -1,7 +1,7 @@
 try:
     from collective.js.jqueryui.config import *
 except ImportError:
-    SUNBURST_CSS_ID = "++resource++jquery-ui-themes/sunburst/jquery-ui-1.8.12.custom.css"
+    SUNBURST_CSS_ID = "++resource++jquery-ui-themes/sunburst/jqueryui.css"
     VERSION = '1.8.12'
 
 PRELOADEDS = ('base', 'black-tie', 'blitzer', 'cupertino', 'dark-hive',

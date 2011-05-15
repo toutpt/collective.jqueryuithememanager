@@ -1,5 +1,5 @@
 class FakeProvider(object):
-    BASE_PATH = '++resource++fakeresource'
+    BASE_PATH = '++resource++jquery-ui-themes/'
     VERSION='1.8.55'
 
     def __init__(self):
@@ -15,7 +15,7 @@ class FakeProvider(object):
         return self.themes.values()
 
 class FakePersistentProvider(FakeProvider):
-    BASE_PATH = 'portal_resources/jqueryuitheme'
+    BASE_PATH = 'portal_resources/jqueryuitheme/'
     VERSION='1.8.55'
 
     def __init__(self):
@@ -25,9 +25,7 @@ class FakePersistentProvider(FakeProvider):
     def downloadTheme(self, params):
         pass
 
-    def getThemes(self, archive=None):
-        if archive is None: 
-            return super(FakePeristentProvider, self).getThemes()
+    def importThemes(archive):
         return []
 
     def deleteTheme(self, id):
@@ -56,6 +54,9 @@ class FakeManager(object):
 
     def getThemesProviders(self):
         return self._providers
+
+    def getPersistentThemesProvider(self):
+        return self._providers[0]
     
     def getThemesIds(self):
         providers = self.getThemesProviders()
@@ -67,11 +68,21 @@ class FakeManager(object):
         return ids
 
     def getThemeById(self, id):
-        return self.themes.get(id,None)
+        providers = self.getThemesProviders()
+        ids = []
+        for provider in providers:
+            for theme in provider.getThemes():
+                if theme.id == id:
+                    return theme
 
     def getThemes(self):
-        return self.themes.values()
-
+        providers = self.getThemesProviders()
+        themes = []
+        providers = self.getThemesProviders()
+        for provider in providers:
+            for theme in provider.getThemes():
+                themes.append(theme)
+        return themes
 
     
 class FakeCSSTool:
@@ -113,7 +124,7 @@ class FakeRegistry:
 
 class FakeResourceDirectory:
     def __init__(self):
-        self.themes = []
+        self.themes = {}
     
 #    def importZip(self, themeZip):
 #        for name in themeZip.namelist():
@@ -132,12 +143,27 @@ class FakeResourceDirectory:
         pass
 
     def __getitem__(self, key):
-        if key == 'css':
-            return self
-        raise IndexError(key)
+        return self.themes[key]
 
     def __delitem__(self, key):
         pass
 
     def listDirectory(self):
-        return self.themes
+        return self.themes.keys()
+
+class FakeTheme(object):
+    def __init__(self, id, provider):
+        self.id = id
+        self.stylesheetid = None
+        self.version = None
+        self.provider = provider
+        self.activated = False
+    def activate(self):
+        self.activated = True
+    
+    def unactivate(self):
+        self.activated = False
+    def getThemeRollerLink(self):
+        return 'http://jqueryui.com/themeroller'
+    
+    

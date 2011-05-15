@@ -56,9 +56,8 @@ class IPersistentThemesProvider(IThemesProvider):
         return IJQueryUITheme object
         """
 
-    def getThemes(archive=None):
-        """if archive is provided, import themes from it and return IJQueryUITHeme objects.
-        """
+    def importThemes(archive):
+        """import themes from archive"""
 
     def deleteTheme(id):
         """Delete a theme. If the theme is used as default, the system default
@@ -74,7 +73,7 @@ class IJQueryUIThemeManager(IThemesProvider):
 
     def getDefaultThemeId():
         """Return the default theme id"""
-    
+
     def setDefaultThemeId(id):
         """Set the default theme used by the theme manager"""
 

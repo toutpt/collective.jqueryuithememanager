@@ -3,7 +3,6 @@ from urlparse import urlparse, parse_qs
 from zope import component
 from zope import interface
 
-
 from collective.jqueryuithememanager import config
 from collective.jqueryuithememanager import interfaces
 from collective.jqueryuithememanager import logger
@@ -11,7 +10,7 @@ from zExceptions import NotFound
 from zExceptions import BadRequest
 
 
-class BaseTheme(object):
+class Theme(object):
     """A theme that works with browser:resourceDirectory"""
     interface.implements(interfaces.IJQueryUITheme)
     BASE_PATH = ''
@@ -75,56 +74,17 @@ class BaseTheme(object):
             self._manager = component.getUtility(interfaces.IJQueryUIThemeManager)
         return self._manager
 
-class SunburstTheme(BaseTheme):
-    """The theme provided by collective.js.jqueryui"""
-    interface.implements(interfaces.IJQueryUITheme)
-
-    def __init__(self, id, provider):
-        super(SunburstTheme, self).__init__(id, provider)
-        if id != "sunburst":raise ValueError("Not Sunburst theme")
-        self.stylesheetid = config.SUNBURST_CSS_ID
-        self.version = config.VERSION
-
-    def activate(self):
-        manager = self.getThemeManager()
-        csstool = manager.getCSSRegistry()
-        try:
-            stylesheets = csstool.getResourcesDict()
-            stylesheet = csstool.getResourcesDict()[self.stylesheetid]
-            stylesheet.setEnabled(True)
-            patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
-            if patch is not None:
-                patch.setEnabled(True)
-            csstool.cookResources()
-        except NotFound, e:
-            logger.info('the new theme has not been found in resource directory')
-
-    def unactivate(self):
-        manager = self.getThemeManager()
-        csstool = manager.getCSSRegistry()
-        try:
-            stylesheets = csstool.getResourcesDict()
-            stylesheet = csstool.getResourcesDict()[self.stylesheetid]
-            stylesheet.setEnabled(False)
-            patch = stylesheets.get('++resource++jquery-ui-themes/sunburst-patch.css', None)
-            if patch is not None:
-                patch.setEnabled(False)
-            csstool.cookResources()
-
-        except KeyError, e:
-            logger.info('the old theme has not been found in resource directory')
 
 
-
-class PersistentTheme(BaseTheme):
+class PersistentTheme(Theme):
     """A theme store in plone.Resource
     
     The css must in portal_resources/jqueryuithemes/themeid/jqueryui.css
     """
     interface.implements(interfaces.IJQueryUITheme)
 
-    def __init__(self, id, manager):
-        super(PersistentTheme, self).__init__(id, manager)
+    def __init__(self, id, provider):
+        super(PersistentTheme, self).__init__(id, provider)
         self.version = ''
         self.initialize()
     

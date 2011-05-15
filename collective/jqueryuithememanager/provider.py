@@ -22,6 +22,7 @@ class PersistentThemeProvider(object):
     interface.implements(interfaces.IPersistentThemesProvider)
     BASE_PATH = 'portal_resources/jqueryuitheme/'
     VERSION = ''
+    THEME_CLASS = theme.PersistentTheme
 
     def __init__(self):
         self._site = None
@@ -30,16 +31,6 @@ class PersistentThemeProvider(object):
         self._csstool = None
         self._themedirectory = None
 
-    def getThemeDirectory(self):
-
-        if self._themedirectory is None:
-            folder = component.getUtility(IResourceDirectory,
-                                          name="persistent")
-            if config.THEME_RESOURCE_NAME not in folder:
-                folder.makeDirectory(config.THEME_RESOURCE_NAME)
-            self._themedirectory = folder[config.THEME_RESOURCE_NAME]
-
-        return self._themedirectory
 
     def getThemeIds(self):
 
@@ -47,26 +38,14 @@ class PersistentThemeProvider(object):
         themes = themeContainer.listDirectory()
         themes = map(str, themes)
         return themes
-
-    def getThemes(self, archive=None):
-
-        if archive is None:
-            themeids = self.getThemeIds()
-            return map(self.getThemeById, themeids)
-
-        return self.getThemesFromZip(archive)
     
     def getThemeById(self, id):
 
-        if id == "sunburst":
-            return theme.SunburstTheme(id, self)
-
-        #Check if it is in peristent folder
         themeContainer = self.getThemeDirectory()
         if id in themeContainer.listDirectory():
-            return theme.PersistentTheme(id, self)
+            return self.THEME_CLASS(id, self)
 
-        return theme.PersistentTheme(id, self)
+        return self.THEME_CLASS(id, self)
 
     def downloadTheme(self, data):
 
@@ -95,10 +74,11 @@ class PersistentThemeProvider(object):
             raise Exception, 'Is not a zip file'
         content = download.read()
         sio = StringIO(content)
+
         theme = self.getThemesFromZip(sio)
         return theme
 
-    def getThemesFromZip(self, themeArchive):
+    def importThemes(self, themeArchive):
         themeZip = checkZipFile(themeArchive)
         themes = []
         themeids = []
@@ -166,6 +146,16 @@ class PersistentThemeProvider(object):
         params['name']=id
         self.downloadTheme(params)
 
+    def getThemeDirectory(self):
+
+        if self._themedirectory is None:
+            folder = component.getUtility(IResourceDirectory,
+                                          name="persistent")
+            if config.THEME_RESOURCE_NAME not in folder:
+                folder.makeDirectory(config.THEME_RESOURCE_NAME)
+            self._themedirectory = folder[config.THEME_RESOURCE_NAME]
+
+        return self._themedirectory
 
 def checkZipFile(archive):
     """Raise exception if not a zip"""
