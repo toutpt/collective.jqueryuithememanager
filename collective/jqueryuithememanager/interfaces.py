@@ -15,7 +15,7 @@ class IThemesProvider(interface.Interface):
     It is used as an entry point for external add-ons who want to provide
     jqueryuitheme. It can be seen has a theme container"""
     
-    def getThemesIds():
+    def getThemeIds():
         """Return a list of all theme ids"""
 
     def getThemeById(id):

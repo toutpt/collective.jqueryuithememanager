@@ -21,7 +21,7 @@ class ThemeTestCase(base.UnitTestCase):
 
     def test_activate(self):
         self.theme.activate()
-        stylesheet = self.theme.getThemeManager().getCSSRegistry().getResourcesDict()[self.config.SUNBURST_CSS_ID]
+        stylesheet = self.theme.getThemeManager().getCSSRegistry().getResourcesDict()['++resource++jquery-ui-themes/sunburst/jqueryui.css']
         self.failUnless(stylesheet.enabled) #must be enabled
         stylesheet.enabled = False
         self.theme.activate()

@@ -5,7 +5,7 @@ class FakeProvider(object):
     def __init__(self):
         self.themes = {}
 
-    def getThemesIds(self):
+    def getThemeIds(self):
         return self.themes.keys()
 
     def getThemeById(self, id):
@@ -58,11 +58,11 @@ class FakeManager(object):
     def getPersistentThemesProvider(self):
         return self._providers[0]
     
-    def getThemesIds(self):
+    def getThemeIds(self):
         providers = self.getThemesProviders()
         ids = []
         for provider in providers:
-            for id in provider.getThemesIds():
+            for id in provider.getThemeIds():
                 if id not in ids:
                     ids.append(id)
         return ids

@@ -15,6 +15,8 @@ class ThemeManager(object):
         self._site = None
         self._settings = None
         self._csstool = None
+        self._persistenttp = None
+        self._providers = None
 
     def site(self):
         if self._site is None:
@@ -44,6 +46,9 @@ class ThemeManager(object):
 
 
     def getThemesProviders(self):
+        if self._providers is not None:
+            return self._providers
+
         providers = []
         utilities = sorted(component.getUtilitiesFor(interfaces.IThemesProvider))
         #WARNING: self is a IThemeProvier, so remove it from results
@@ -54,13 +59,18 @@ class ThemeManager(object):
             elif provider is not self:
                 providers.append(provider)
 
+        self._providers = providers
         return providers
 
     def getPersistentThemesProvider(self):
+        if self._persistenttp is not None:
+            return self._persistenttp
         registry = component.getUtility(IRegistry)
         name = 'portal_resources_jqueryuithemes'
-        return component.queryUtility(interfaces.IPersistentThemesProvider,
-                                      name)
+        utility = component.queryUtility(interfaces.IPersistentThemesProvider,
+                                         name)
+        self._persistenttp = utility
+        return utility
 
     def getThemeIds(self):
         themes = []

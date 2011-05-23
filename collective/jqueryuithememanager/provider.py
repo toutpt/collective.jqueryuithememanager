@@ -47,6 +47,16 @@ class PersistentThemeProvider(object):
 
         return self.THEME_CLASS(id, self)
 
+    def getThemes(self):
+        themes = []
+        themeContainer = self.getThemeDirectory()
+
+        for id in themeContainer.listDirectory():
+            themes.append(self.THEME_CLASS(id, self))
+
+        return themes
+
+
     def downloadTheme(self, data):
 
         BASE = "http://jqueryui.com/download/"
@@ -75,7 +85,7 @@ class PersistentThemeProvider(object):
         content = download.read()
         sio = StringIO(content)
 
-        theme = self.getThemesFromZip(sio)
+        theme = self.importThemes(sio)
         return theme
 
     def importThemes(self, themeArchive):
