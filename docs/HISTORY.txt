@@ -1,7 +1,13 @@
 Changelog
 =========
 
-1.0dev (unreleased)
--------------------
+1.0a2 (unreleased)
+------------------
+
+- Fix eggs metadatas
+
+
+1.0a1 (2010-05-23)
+------------------
 
 - Initial release
