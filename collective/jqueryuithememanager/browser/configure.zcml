@@ -58,13 +58,9 @@
     name="jqueryui_icon.jpg"
     file="jqueryui_icon.jpg"
     />
-  <browser:resourceDirectory
-    name="jqueryuithememanager"
-    directory="themes"
-    />
   <utility
     factory=".provider.BrowserResourceThemeProvider"
-    name="jqueryuithememanager"
+    name="sunburstthemeprovider"
     provides="collective.jqueryuithememanager.interfaces.IThemesProvider"
     />
 

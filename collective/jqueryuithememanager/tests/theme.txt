@@ -74,17 +74,16 @@ So now lets used that theme and control the import has not activated it
     True
 
 INTEGRATION TEST: Now check server side resources must be registred in portal_css
-and the sunburst must be unactivated
 
     >>> from collective.jqueryuithememanager import config
     >>> csstool = self.portal.portal_css
-    >>> defaultcss = csstool.getResourcesDict()[config.SUNBURST_CSS_ID]
     >>> currentcss = csstool.getResourcesDict()['portal_resources/jqueryuitheme/mytheme/jqueryui.css']
-    >>> defaultcss.getEnabled()
-    False
     >>> currentcss.getEnabled()
     True
     >>> currentcss.getApplyPrefix()
+    True
+    >>> sunburst = csstool.getResourcesDict().get('++resource++jquery-ui-themes/sunburst/jqueryui.css', None)
+    >>> sunburst is None
     True
 
 
@@ -105,6 +104,14 @@ Next we go back to jqueryui controlpanel to select 'Import a theme'
     True
     >>> ctrl.add_file(jqueryui_zip, 'application/zip', 'jqueryui.zip')
     >>> browser.getControl('Import').click()
+    >>> import tempfile as tmp
+    >>> def contents():
+    ...    fd, fn = tmp.mkstemp(suffix=".html", prefix="testbrowser-")
+    ...    file = open(fn, 'w')
+    ...    file.write(browser.contents)
+    ...    file.close()
+    ...    print fn
+    >>> import pdb; pdb.set_trace()
     >>> 'Theme imported. You may want to select this theme.' in browser.contents
     True
 

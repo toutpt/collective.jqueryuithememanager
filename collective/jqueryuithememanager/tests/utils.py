@@ -37,6 +37,9 @@ class FakePersistentProvider(FakeProvider):
     def getThemeDirectory(self):
         return self._directory
 
+    def getThemeIds(self):
+        return self._directory.listDirectory()
+
 class FakeManager(object):
     def __init__(self):
         self._tool = FakeCSSTool()

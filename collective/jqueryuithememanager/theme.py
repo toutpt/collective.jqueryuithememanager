@@ -53,12 +53,13 @@ class Theme(object):
     def getThemeRollerLink(self):
         link = None
         if self.provider is not None:
-            link = self.provider.THEME_ROLLER.get(self.id,None)
-            if link is not None: return link
+            if hasattr(self.provider, 'THEME_ROLLER'):
+                link = self.provider.THEME_ROLLER.get(self.id,None)
+                if link is not None: return link
         #don t find in metadata, lets extract from the css
-        csstool = self.manager.getCSSRegistry()
+        manager = self.getThemeManager()
+        csstool = manager.getCSSRegistry()
         site = component.getSiteManager()
-        #Weird code, .GET broke the page, I don't find an other way to get the content of the CSS
         path = site.restrictedTraverse(self.stylesheetid).context.path
         f = open(path,'rb')
         data = f.read()
@@ -67,6 +68,7 @@ class Theme(object):
         for line in data_splited:
             if "http://jqueryui.com/themeroller/" in line:
                 link = line[line.index('http'):]
+                break
         return link
 
     def getThemeManager(self):

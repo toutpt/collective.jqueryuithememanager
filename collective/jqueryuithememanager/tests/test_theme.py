@@ -17,7 +17,7 @@ class ThemeTestCase(base.UnitTestCase):
         self.theme._manager = tm
 
     def test_stylesheetid(self):
-        self.failUnless(self.theme.stylesheetid == self.config.SUNBURST_CSS_ID)
+        self.failUnless(self.theme.stylesheetid == '++resource++jquery-ui-themes/sunburst/jqueryui.css')
 
     def test_activate(self):
         self.theme.activate()

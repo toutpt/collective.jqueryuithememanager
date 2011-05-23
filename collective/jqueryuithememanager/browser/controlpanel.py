@@ -96,7 +96,7 @@ class ImportThemeForm(AutoExtensibleForm, form.Form):
         try:
             tm = getThemeManager()
             tp = tm.getPersistentThemesProvider()
-            themes = tp.getThemes(archive=sio)
+            themes = tp.importThemes(sio)
             msg = i18n.msg_importtheme_changes_saved
             IStatusMessage(self.request).addStatusMessage(msg)
             url="%s/%s" % (abs_url, self.parent_view)
@@ -132,7 +132,7 @@ class LoadDefaultThemes(BrowserView):
         themeArchive = StringIO.StringIO(jqueryui_content)
         tm = getThemeManager()
         tp = tm.getPersistentThemesProvider()
-        themes = tp.getThemes(archive=themeArchive) #load themes !
+        themes = tp.importThemes(themeArchive) #load themes !
         IStatusMessage(self.request).addStatusMessage(i18n.msg_defaulttheme_loaded)
         self.request.response.redirect("%s/%s" % (self.context.absolute_url(), self.parent_view))
 

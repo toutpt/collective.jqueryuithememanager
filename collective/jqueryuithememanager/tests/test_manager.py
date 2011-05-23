@@ -1,7 +1,6 @@
 import base
 import utils
 
-
 class ThemeManagerTestCase(base.UnitTestCase):
     def setUp(self):
         super(ThemeManagerTestCase, self).setUp()
