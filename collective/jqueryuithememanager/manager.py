@@ -1,11 +1,10 @@
 from zope import component
 from zope import interface
 
-from collective.jqueryuithememanager import config
 from collective.jqueryuithememanager import interfaces
-from collective.jqueryuithememanager import logger
 
 from plone.registry.interfaces import IRegistry
+
 
 class ThemeManager(object):
     """implements IJQueryUIThemeManager"""
@@ -31,7 +30,9 @@ class ThemeManager(object):
 
     def settings(self):
         if self._settings is None:
-            self._settings = component.getUtility(IRegistry).forInterface(interfaces.IDefaultThemeFormSchema)
+            registry = component.getUtility(IRegistry)
+            iface = interfaces.IDefaultThemeFormSchema
+            self._settings = registry.forInterface(iface)
         return self._settings
 
     def getDefaultThemeId(self):
@@ -44,13 +45,13 @@ class ThemeManager(object):
         settings = self.settings()
         settings.theme = themeid
 
-
     def getThemesProviders(self):
         if self._providers is not None:
             return self._providers
 
         providers = []
-        utilities = sorted(component.getUtilitiesFor(interfaces.IThemesProvider))
+        iface = interfaces.IThemesProvider
+        utilities = sorted(component.getUtilitiesFor(iface))
         #WARNING: self is a IThemeProvier, so remove it from results
         for utility in utilities:
             name, provider = utility
@@ -65,7 +66,6 @@ class ThemeManager(object):
     def getPersistentThemesProvider(self):
         if self._persistenttp is not None:
             return self._persistenttp
-        registry = component.getUtility(IRegistry)
         name = 'portal_resources_jqueryuithemes'
         utility = component.queryUtility(interfaces.IPersistentThemesProvider,
                                          name)
@@ -76,12 +76,12 @@ class ThemeManager(object):
         themes = []
         providers = self.getThemesProviders()
         for provider in providers:
-            ids = provider.getThemeIds()
-            for id in ids:
-                if id not in themes:
-                    themes.append(id)
+            themeids = provider.getThemeIds()
+            for themeid in themeids:
+                if themeid not in themes:
+                    themes.append(themeid)
         if 'sunburst' not in themes:
-            themes.insert(0,'sunburst')
+            themes.insert(0, 'sunburst')
         return themes
 
     def getThemes(self):
@@ -96,10 +96,10 @@ class ThemeManager(object):
                     themes.append(theme)
         return themes
 
-    def getThemeById(self, id):
+    def getThemeById(self, themeid):
         providers = self.getThemesProviders()
         for provider in providers:
             pthemes = provider.getThemes()
             for theme in pthemes:
-                if theme.id == id:
+                if theme.id == themeid:
                     return theme

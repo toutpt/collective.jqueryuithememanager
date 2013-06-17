@@ -2,8 +2,9 @@ class FakeProvider(object):
     BASE_PATH = '++resource++jquery-ui-themes/'
     VERSION='1.8.55'
 
-    def __init__(self):
+    def __init__(self, manager):
         self.themes = {}
+        self._manager = manager
 
     def getThemeIds(self):
         return self.themes.keys()
@@ -13,6 +14,9 @@ class FakeProvider(object):
 
     def getThemes(self):
         return self.themes.values()
+    
+    def getThemeManager(self):
+        return self._manager
 
 class FakePersistentProvider(FakeProvider):
     BASE_PATH = 'portal_resources/jqueryuitheme/'
@@ -43,7 +47,7 @@ class FakePersistentProvider(FakeProvider):
 class FakeManager(object):
     def __init__(self):
         self._tool = FakeCSSTool()
-        self._providers = [FakePersistentProvider(), FakeProvider()]
+        self._providers = [FakePersistentProvider(self), FakeProvider(self)]
         self._default = 'sunburst'
 
     def getCSSRegistry(self):
@@ -169,4 +173,5 @@ class FakeTheme(object):
     def getThemeRollerLink(self):
         return 'http://jqueryui.com/themeroller'
     
-    
+    def getCSSRegistry(self):
+        return self.provider.getThemeManager()._tool()

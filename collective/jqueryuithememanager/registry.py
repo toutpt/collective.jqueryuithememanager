@@ -4,6 +4,7 @@ from plone.registry.interfaces import IRecordModifiedEvent
 
 from collective.jqueryuithememanager import interfaces
 
+
 @component.adapter(interfaces.IDefaultThemeFormSchema, IRecordModifiedEvent)
 def handleRegistryModified(settings, event):
     """Handle configuration change in the registry on theme config"""

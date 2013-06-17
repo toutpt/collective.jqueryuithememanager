@@ -29,6 +29,9 @@ class ThemeTestCase(base.UnitTestCase):
         self.theme.unactivate()
         self.failUnless('sunburst' not in self.tm._tool.resources)
 
+    def test_getCSSRegistry(self):
+        csstool = self.theme.getCSSRegistry()
+        self.failUnless(type(csstool)==utils.FakeCSSTool)
 
 class PersistentThemeTestCase(base.UnitTestCase):
     def setUp(self):

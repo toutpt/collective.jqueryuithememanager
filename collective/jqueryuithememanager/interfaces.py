@@ -1,20 +1,21 @@
 from zope import interface
 from zope import schema
 from zope.schema import vocabulary
+from plone.autoform.interfaces import WIDGETS_KEY
 
 from collective.jqueryuithememanager import i18n
 from collective.jqueryuithememanager import config
 
+
 class IJQueryUIThemeManagerLayer(interface.Interface):
     """Browser layer"""
-
 
 
 class IThemesProvider(interface.Interface):
     """A IThemeProver object is a registry of theme in read only mode.
     It is used as an entry point for external add-ons who want to provide
     jqueryuitheme. It can be seen has a theme container"""
-    
+
     def getThemeIds():
         """Return a list of all theme ids"""
 
@@ -26,24 +27,30 @@ class IThemesProvider(interface.Interface):
     def getThemes():
         """Return a list of ITheme objects"""
 
+    def getThemeManager():
+        """Return the theme manager associated to this provider"""
+
+
 class IJQueryUITheme(interface.Interface):
     """A JQueryUI Theme object."""
-    
+
     stylesheetid = schema.ASCIILine(title=u"Stylesheet ID")
-    
+
     version = schema.ASCIILine(title=i18n.label_theme_version)
-    
+
     provider = schema.Object(title=u"theme provider", schema=IThemesProvider)
-    
+
     def activate():
         """Register the theme in the css registry."""
-    
+
     def unactivate():
         """Unregister the theme from the css registry."""
 
     def getThemeRollerLink():
         """Return the link to jqueryui.com/themeroller to configure it"""
 
+    def getCSSRegistry():
+        """Return the cssregistry where the theme will be activated"""
 
 
 class IPersistentThemesProvider(IThemesProvider):
@@ -66,6 +73,7 @@ class IPersistentThemesProvider(IThemesProvider):
     def updateTheme(id):
         """Update a theme to fit with the js system version"""
 
+
 class IJQueryUIThemeManager(IThemesProvider):
     """A IJQueryUITheme manager, is an aggregation of IThemesProvider with
     a peristent theme provider to be able to customize a theme
@@ -86,13 +94,15 @@ class IJQueryUIThemeManager(IThemesProvider):
         """Return the css registry"""
 
     def getPersistentThemesProvider():
-        """Return the default theme provider to use for create, modify themes"""
+        """Return the default theme provider to use for create, modify themes
+        """
+
 
 class IJQueryUIThemeSettings(interface.Interface):
     """Define a JQuery UI Theme"""
-    
+
     name = schema.ASCIILine(title=i18n.themename)
-    
+
     #Fonts
     fwDefault = schema.ASCIILine(title=i18n.fwDefault,
                                  default='normal')
@@ -100,11 +110,11 @@ class IJQueryUIThemeSettings(interface.Interface):
                                  default='Arial,FreeSans,sans-serif')
     fsDefault = schema.ASCIILine(title=i18n.fsDefault,
                                  default='1.2em')
-    
+
     #corner
     cornerRadius = schema.ASCIILine(title=i18n.cornerRadius,
                                  default='5px')
-    
+
     #header/toolbar
     bgColorHeader = schema.TextLine(title=i18n.bgColorHeader,
                                  default=u'#dddddd')
@@ -118,7 +128,7 @@ class IJQueryUIThemeSettings(interface.Interface):
                                  default='#205c90')
     fcHeader = schema.ASCIILine(title=i18n.fcHeader,
                                  default='#444444')
-    
+
     #content
     bgColorContent = schema.ASCIILine(title=i18n.bgColorContent,
                                  default='#ffffff')
@@ -132,7 +142,7 @@ class IJQueryUIThemeSettings(interface.Interface):
                                  default='#205c90')
     fcContent = schema.ASCIILine(title=i18n.fcContent,
                                  default='#444444')
-    
+
     #clickable default state
     bgColorDefault = schema.ASCIILine(title=i18n.bgColorDefault,
                                  default='#205c90')
@@ -160,7 +170,7 @@ class IJQueryUIThemeSettings(interface.Interface):
                                  default='#444444')
     fcHover = schema.ASCIILine(title=i18n.fcHover,
                                  default='#444444')
-    
+
     #clickable active state
     bgColorActive = schema.ASCIILine(title=i18n.bgColorActive,
                                  default='#75ad0a')
@@ -231,14 +241,18 @@ class IJQueryUIThemeSettings(interface.Interface):
     offsetTopShadow = schema.ASCIILine(title=i18n.offsetTopShadow,
                                  default='5px')
 
-from plone.autoform.interfaces import WIDGETS_KEY
 
+WIDGET = 'collective.z3cform.colorpicker.colorpicker.ColorpickerFieldWidget'
 COLOR_WIDGETS = {}
 for i in config.THEME_SETTINGS:
-    if 'color' not in i.lower() and not i.startswith('fc'):continue
-    COLOR_WIDGETS[i] = 'collective.z3cform.colorpicker.colorpicker.ColorpickerFieldWidget'
+    if 'color' not in i.lower() and not i.startswith('fc'):
+        continue
+    COLOR_WIDGETS[i] = WIDGET
 
 IJQueryUIThemeSettings.setTaggedValue(WIDGETS_KEY, COLOR_WIDGETS)
+THEME_VOCAB = 'collective.jqueryuithememanager.vocabularies.themes'
+PTHEME_VOCAB = 'collective.jqueryuithememanager.vocabularies.persistentthemes'
+
 
 class IDefaultThemeFormSchema(interface.Interface):
     """JQueryUIThem settings"""
@@ -246,13 +260,16 @@ class IDefaultThemeFormSchema(interface.Interface):
     theme = schema.Choice(title=i18n.label_theme,
                           required=True,
                           default='sunburst',
-                          vocabulary='collective.jqueryuithememanager.vocabularies.themes')
+                          vocabulary=THEME_VOCAB)
+
 
 class IDeleteThemeFormSchema(interface.Interface):
     """Delete theme form"""
-    themes = schema.List(title=i18n.label_themes,
-                required=True,
-                value_type=schema.Choice(title=i18n.label_theme,
-                         vocabulary='collective.jqueryuithememanager.vocabularies.persistentthemes')
-                         )
-
+    themes = schema.List(
+        title=i18n.label_themes,
+        required=True,
+        value_type=schema.Choice(
+            title=i18n.label_theme,
+            vocabulary=PTHEME_VOCAB
+        )
+    )

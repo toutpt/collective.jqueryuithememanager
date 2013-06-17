@@ -2,8 +2,9 @@ import zipfile
 
 from StringIO import StringIO
 
-from urlparse import urlparse
-from urllib import urlencode, quote, quote_plus, unquote, unquote_plus
+#from urlparse import urlparse
+from urllib import urlencode, quote
+#, quote_plus, unquote, unquote_plus
 from urllib2 import urlopen
 
 from zope import component
@@ -31,57 +32,56 @@ class PersistentThemeProvider(object):
         self._csstool = None
         self._themedirectory = None
 
-
     def getThemeIds(self):
 
         themeContainer = self.getThemeDirectory()
         themes = themeContainer.listDirectory()
         themes = map(str, themes)
         return themes
-    
-    def getThemeById(self, id):
+
+    def getThemeById(self, themeid):
 
         themeContainer = self.getThemeDirectory()
-        if id in themeContainer.listDirectory():
-            return self.THEME_CLASS(id, self)
+        if themeid in themeContainer.listDirectory():
+            return self.THEME_CLASS(themeid, self)
 
-        return self.THEME_CLASS(id, self)
+        return self.THEME_CLASS(themeid, self)
 
     def getThemes(self):
         themes = []
         themeContainer = self.getThemeDirectory()
 
-        for id in themeContainer.listDirectory():
-            themes.append(self.THEME_CLASS(id, self))
+        for themeid in themeContainer.listDirectory():
+            themes.append(self.THEME_CLASS(themeid, self))
 
         return themes
-
 
     def downloadTheme(self, data):
 
         BASE = "http://jqueryui.com/download/"
         query = 'download=true'
-    
-        for file in config.FILES:
-            query += '&files[]='+file
-    
-        query+= '&t-name='+data['name']
-        query+= '&scope='
-        query+='&ui-version='+config.VERSION
+
+        for ffile in config.FILES:
+            query += '&files[]=' + ffile
+
+        query += '&t-name=' + data['name']
+        query += '&scope='
+        query += '&ui-version=' + config.VERSION
         datac = data.copy()
         del datac['name']
         for key in datac:
-            if 'Texture' in key: datac[key] = '01_flat.png' #force to use flat
-        theme = urlencode(datac).replace('%23','') # %23 is # and we don't want this in color code
-        query+='&theme=%3F'+quote(theme)
+            if 'Texture' in key:
+                datac[key] = '01_flat.png'  # force to use flat
+        theme = urlencode(datac).replace('%23', '')  # %23 is #
+        query += '&theme=%3F' + quote(theme)
 #        logger.info('download : %s/?%s'%(BASE, query))
-        download = urlopen(BASE+'?'+query)
+        download = urlopen(BASE + '?' + query)
         code = download.getcode()
-    
+
         if code != 200:
-            raise Exception, 'Cant download the theme got %s code'%code
+            raise Exception('Cant download the theme got %s code' % code)
         if download.info().type != 'application/zip':
-            raise Exception, 'Is not a zip file'
+            raise Exception('Is not a zip file')
         content = download.read()
         sio = StringIO(content)
 
@@ -90,7 +90,6 @@ class PersistentThemeProvider(object):
 
     def importThemes(self, themeArchive):
         themeZip = checkZipFile(themeArchive)
-        themes = []
         themeids = []
         folder = self.getThemeDirectory()
 
@@ -99,14 +98,14 @@ class PersistentThemeProvider(object):
             path = member.filename.lstrip('/')
             path_splited = path.split('/')
             version = ''
-            link = '' #get the link to rebuild this theme
+            link = ''  # get the link to rebuild this theme
             if path_splited[0] != 'development-bundle' and \
                not path_splited[0].startswith('jquery-ui-themes-'):
                 continue
             if path.endswith('version.txt'):
                 version = themeZip.open(member).read()
                 continue
-            if len(path_splited)<2:
+            if len(path_splited) < 2:
                 continue
             if path_splited[1] != 'themes':
                 continue
@@ -117,43 +116,47 @@ class PersistentThemeProvider(object):
                 themeids.append(themeid)
             newpath = themeid + '/'
             folder.makeDirectory(newpath)
-            folder.makeDirectory(newpath+'images/')
-            if path.endswith('.png'):
+            folder.makeDirectory(newpath + 'images/')
+            ispng = path.endswith('.png')
+            iscustom = path.endswith('.custom.css')
+            isjqui = path.endswith('jquery-ui.css')
+            if ispng:
                 data = themeZip.open(member).read()
-                folder.writeFile(newpath+'images/'+path_splited[-1], data)
-            elif path.endswith('.custom.css') or path.endswith('jquery-ui.css'):
+                folder.writeFile(newpath + 'images/' + path_splited[-1], data)
+            elif iscustom or isjqui:
                 data = themeZip.open(member).read()
-                folder.writeFile(newpath+'jqueryui.css', data)
+                folder.writeFile(newpath + 'jqueryui.css', data)
                 if not version:
                     #TODO: find version in the css itself
                     data_splited = data.split('\n')
-                    version = ''.join(data_splited[1][len(" * jQuery UI CSS Framework "):])
+                    start = len(" * jQuery UI CSS Framework ")
+                    version = ''.join(data_splited[1][start:])
                     for line in data_splited:
                         if "http://jqueryui.com/themeroller/" in line:
                             link = line[line.index('http'):]
             if version:
-                folder.writeFile(newpath+'version.txt',version)
+                folder.writeFile(newpath + 'version.txt', version)
             elif version:
                 logger.error('no version.txt found')
             if link:
-                folder.writeFile(newpath+'link.txt', link)
+                folder.writeFile(newpath + 'link.txt', link)
             elif version:
                 logger.error('no link found')
 
         return map(self.getThemeById, themeids)
 
-    def deleteTheme(self, id):
-        theme = self.getThemeById(id)
+    def deleteTheme(self, themeid):
+        theme = self.getThemeById(themeid)
         folder = self.getThemeDirectory()
-        del folder[id]
+        del folder[themeid]
         #TODO: add notification
 
-    def updateTheme(self, id):
+    def updateTheme(self, themeid):
         #We want to support update of every provided theme
         tm = component.getUtility(interfaces.IJQueryUIThemeManager)
-        theme = tm.getThemeById(id)
+        theme = tm.getThemeById(themeid)
         params = theme.getParams()
-        params['name']=id
+        params['name'] = themeid
         self.downloadTheme(params)
 
     def getThemeDirectory(self):
@@ -167,6 +170,7 @@ class PersistentThemeProvider(object):
 
         return self._themedirectory
 
+
 def checkZipFile(archive):
     """Raise exception if not a zip"""
     try:
@@ -175,4 +179,3 @@ def checkZipFile(archive):
         logger.exception("Could not read zip file")
         raise TypeError('error_invalid_zip')
     return themeZip
-

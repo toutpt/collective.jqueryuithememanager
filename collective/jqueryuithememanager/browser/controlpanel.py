@@ -29,12 +29,14 @@ from plone.namedfile.field import NamedFile
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.CMFCore.utils import getToolByName
 
+
 def getThemeManager():
     return component.getUtility(interfaces.IJQueryUIThemeManager)
 
+
 class MainControlPanelView(BrowserView):
     """Main control panel"""
-    
+
     def isExampleJqueryUIEnabled(self):
         pp = getToolByName(self.context, 'portal_properties')
         try:
@@ -47,6 +49,7 @@ class SelectThemeControlPanelForm(RegistryEditForm):
     """Select a theme control panel"""
     schema = interfaces.IDefaultThemeFormSchema
     control_panel_view = "collective.jqueryuithememanager-controlpanel"
+
 
 class SelectThemeControlPanelView(layout.FormWrapper):
     label = i18n.label_selectcontrolpanel
@@ -79,6 +82,7 @@ class IImportThemeForm(interface.Interface):
     themeArchive = schema.Bytes(title=i18n.label_theme_archive,
                                 description=i18n.desc_theme_archive)
 
+
 class ImportThemeForm(AutoExtensibleForm, form.Form):
     """Import Theme Form control panel (from a zipfile)"""
     schema = IImportThemeForm
@@ -92,24 +96,24 @@ class ImportThemeForm(AutoExtensibleForm, form.Form):
         data, errors = self.extractData()
         sio = StringIO.StringIO()
         sio.write(data['themeArchive'])
-        abs_url=self.context.absolute_url()
+        abs_url = self.context.absolute_url()
         try:
             tm = getThemeManager()
             tp = tm.getPersistentThemesProvider()
             themes = tp.importThemes(sio)
             msg = i18n.msg_importtheme_changes_saved
             IStatusMessage(self.request).addStatusMessage(msg)
-            url="%s/%s" % (abs_url, self.parent_view)
+            url = "%s/%s" % (abs_url, self.parent_view)
             self.request.response.redirect(url)
         except TypeError, e:
             IStatusMessage(self.request).add(i18n.err_importtheme_typeerror,
                                              type=u'error')
-            url="%s/%s" % (abs_url,"@@jqueryui-import-theme")
+            url = "%s/%s" % (abs_url, "@@jqueryui-import-theme")
             self.request.response.redirect(url)
         except ValueError, e:
             IStatusMessage(self.request).add(i18n.err_importtheme_valueerror,
                                              type=u'error')
-            url="%s/%s" % (abs_url, "@@jqueryui-import-theme")
+            url = "%s/%s" % (abs_url, "@@jqueryui-import-theme")
             self.request.response.redirect(url)
 
 
@@ -127,12 +131,12 @@ class LoadDefaultThemes(BrowserView):
     parent_view = "@@collective.jqueryuithememanager-controlpanel"
 
     def __call__(self):
-        url = "http://jquery-ui.googlecode.com/files/jquery-ui-themes-%s.zip"%(config.VERSION)
+        url = "http://jquery-ui.googlecode.com/files/jquery-ui-themes-%s.zip" % (config.VERSION)
         jqueryui_content = urllib.urlopen(url).read()
         themeArchive = StringIO.StringIO(jqueryui_content)
         tm = getThemeManager()
         tp = tm.getPersistentThemesProvider()
-        themes = tp.importThemes(themeArchive) #load themes !
+        themes = tp.importThemes(themeArchive)  # load themes !
         IStatusMessage(self.request).addStatusMessage(i18n.msg_defaulttheme_loaded)
         self.request.response.redirect("%s/%s" % (self.context.absolute_url(), self.parent_view))
 
@@ -148,8 +152,8 @@ class DeleteThemeForm(AutoExtensibleForm, form.Form):
     @button.buttonAndHandler(i18n.action_delete_theme)
     def handleDeleteTheme(self, action):
         data, errors = self.extractData()
-        abs_url=self.context.absolute_url()
-        url = abs_url+'/@@collective.jqueryuithememanager-delete-theme'
+        abs_url = self.context.absolute_url()
+        url = abs_url + '/@@collective.jqueryuithememanager-delete-theme'
 
         tm = getThemeManager()
         tp = tm.getPersistentThemesProvider()
@@ -185,10 +189,9 @@ class DeleteThemeForm(AutoExtensibleForm, form.Form):
         else:
             msg = i18n.msg_deletethemes_changes_saved
         IStatusMessage(self.request).add(msg)
-        abs_url=self.context.absolute_url()
-        url="%s/%s" % (abs_url, self.parent_view)
+        abs_url = self.context.absolute_url()
+        url = "%s/%s" % (abs_url, self.parent_view)
         self.request.response.redirect(url)
-
 
 
 class DeleteThemeFormWrapper(layout.FormWrapper):
@@ -211,7 +214,7 @@ class ThemesWhichNeedAnUpdate(BrowserView):
 
     def jsversion(self):
         return config.VERSION
-    
+
     def needupdate(self, theme):
         return theme.version != config.VERSION
 
@@ -224,9 +227,8 @@ class UpdateTheme(BrowserView):
         tp = tm.getPersistentThemesProvider()
         tp.updateTheme(id)
         abs_url = self.context.absolute_url()
-        url="%s/collective.jqueryuithememanager-update-themes"%abs_url 
+        url = "%s/collective.jqueryuithememanager-update-themes" % abs_url
         msg = u"Theme has been updated"
 
         IStatusMessage(self.request).add(msg)
         self.request.response.redirect(url)
-
